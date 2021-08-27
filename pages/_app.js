@@ -1,7 +1,22 @@
-import '../styles/globals.css'
+/* eslint-disable @next/next/no-sync-scripts */
+import '../styles/globals.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import Head from 'next/head';
+import {Fragment} from 'react';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+function MyApp({Component, pageProps}) {
+  return (
+    <Fragment>
+      <Head>
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+          crossOrigin="anonymous"
+        ></script>
+      </Head>
+      <Component {...pageProps} />
+    </Fragment>
+  );
 }
 
-export default MyApp
+export default MyApp;
