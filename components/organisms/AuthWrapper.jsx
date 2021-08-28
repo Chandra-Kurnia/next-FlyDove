@@ -66,27 +66,33 @@ const AuthWrapper = (props) => {
           </div>
           <span>{props.welcomeMSG}</span>
           {props.children}
-          {props.parent === 'Login' && <SpanFP onClick={() => router.push('/')}>Forgot password</SpanFP>}
+          {props.parent === 'Login' && <SpanFP onClick={() => router.push('/auth/forgotpw')}>Forgot password</SpanFP>}
           <ButtonAuth onClick={props.onClick} className="bg-custom-primary mt-2" text={props.parent} />
-          <Separator text={`${props.parent} with`} className="mt-2 mb-2" />
-          <ButtonAuth className="bg-outline-custom-primary" text="Google" />
-          <span className="d-block text-center pt-4">
-            {props.parent === 'Login' ? (
-              <>
-              Dont have account ?
-              <Link href="/auth/signup">
-                <A>Sign up</A>
-              </Link>
-              </>
-            ) : (
-              <>
-              Already have account?
-              <Link href="/auth/login">
-                <A>Login</A>
-              </Link>
-              </>
-            )}
-          </span>
+          {props.parent === 'send' ? (
+            ''
+          ) : (
+            <>
+              <Separator text={`${props.parent} with`} className="mt-2 mb-2" />
+              <ButtonAuth className="bg-outline-custom-primary" text="Google" />
+              <span className="d-block text-center pt-4">
+                {props.parent === 'Login' ? (
+                  <>
+                    Dont have account ?
+                    <Link href="/auth/signup">
+                      <A>Sign up</A>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    Already have account?
+                    <Link href="/auth/login">
+                      <A>Login</A>
+                    </Link>
+                  </>
+                )}
+              </span>
+            </>
+          )}
         </div>
       </Wrapper>
     </Fragment>
