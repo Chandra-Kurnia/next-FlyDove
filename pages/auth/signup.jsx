@@ -30,6 +30,7 @@ const Wrapper = styled.div`
 
 const Signup = () => {
   const [form, setform] = useState({
+    name: '',
     email: '',
     password: '',
   });
@@ -40,7 +41,7 @@ const Signup = () => {
     });
   };
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     console.log(form);
   };
   return (
@@ -52,18 +53,19 @@ const Signup = () => {
       <Wrapper className="d-flex justify-content-center align-items-center mt-lg-4 mt-md-5 mt-0">
         <AuthWrapper
           onChange={(e) => handleForm(e)}
-          onClick={handleLogin}
-          back={false}
-          title="Login"
-          welcomeMSG="Hi, welcome back"
+          onClick={handleSignup}
+          back={true}
+          title="Sign up"
+          welcomeMSG="Let’s create your account!"
           fpSpan={true}
-          questionAuth='Dont have an account ?'
-          parent='Login'
+          questionAuth="Dont have an account ?"
+          parent="Sign up"
         >
-          <InputAuthMolecul className="pt-3" label="email" type="text" name="email" onChange={(e) => handleForm(e)} />
+          <InputAuthMolecul className="pt-3" label="Name" type="text" name="name" onChange={(e) => handleForm(e)} />
+          <InputAuthMolecul className="pt-3" label="Email" type="text" name="email" onChange={(e) => handleForm(e)} />
           <InputAuthMolecul
             className="pt-3"
-            label="password"
+            label="Password"
             type="password"
             name="password"
             onChange={(e) => handleForm(e)}

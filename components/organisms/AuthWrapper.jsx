@@ -3,7 +3,6 @@
 import {Fragment} from 'react';
 import styled from 'styled-components';
 import SpanAuth from '../atoms/SpanAuth';
-import InputAuthMolecul from '../molecules/InputAuthMolecul';
 import {useRouter} from 'next/router';
 import ButtonAuth from '../atoms/ButtonAuth';
 import Separator from '../atoms/Separator';
@@ -62,7 +61,7 @@ const AuthWrapper = (props) => {
       <Wrapper className="pt-3 pb-5 d-flex">
         <div className="container ps-5 pe-5">
           <div className="text-center mb-5">
-            {props.back === true && <Image src={Back.src} alt="back" />}
+            {props.back === true && <Image onClick={() => router.back()} src={Back.src} alt="back" />}
             <SpanAuth text={props.title} />
           </div>
           <span>{props.welcomeMSG}</span>
@@ -75,14 +74,14 @@ const AuthWrapper = (props) => {
             {props.parent === 'Login' ? (
               <>
               Dont have account ?
-              <Link href="/">
+              <Link href="/auth/signup">
                 <A>Sign up</A>
               </Link>
               </>
             ) : (
               <>
               Already have account?
-              <Link href="/">
+              <Link href="/auth/login">
                 <A>Login</A>
               </Link>
               </>
