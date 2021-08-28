@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Login = () => {
+const Signup = () => {
   const [form, setform] = useState({
     email: '',
     password: '',
@@ -46,7 +46,7 @@ const Login = () => {
   return (
     <Fragment>
       <Head>
-        <title>Telegram | Login</title>
+        <title>Telegram | Sign up</title>
       </Head>
       <Globalstyle />
       <Wrapper className="d-flex justify-content-center align-items-center mt-lg-4 mt-md-5 mt-0">
@@ -74,4 +74,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
