@@ -41,6 +41,7 @@ const A = styled.a`
   color: var(--primary);
   font-weight: bold;
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     text-decoration: none;
     color: var(--primary);
