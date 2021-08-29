@@ -5,6 +5,7 @@ import Head from 'next/head';
 import {Fragment} from 'react';
 import store from '../redux/store';
 import {Provider} from 'react-redux';
+import NextNProgress from 'nextjs-progressbar';
 
 function MyApp({Component, pageProps}) {
   return (
@@ -17,7 +18,15 @@ function MyApp({Component, pageProps}) {
             crossOrigin="anonymous"
           ></script>
         </Head>
-        <Component {...pageProps} />
+        <NextNProgress
+  color="#29D"
+  startPosition={0.3}
+  stopDelayMs={200}
+  height={3}
+  showOnShallow={true}
+  options={{ easing: 'ease', speed: 500 }}
+/>
+      <Component {...pageProps} />
       </Provider>
     </Fragment>
   );

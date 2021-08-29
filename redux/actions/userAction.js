@@ -1,7 +1,7 @@
 import swal from 'sweetalert';
 import {default as axios} from '../../configs/axios';
 
-export const register = (data, push) => async (dispatch) => {
+const register = (data, push) => async (dispatch) => {
   try {
     await axios.post('/user/register', data);
     swal('success', 'Register success, now you can login with yout account', 'success').then(() => {
@@ -16,7 +16,7 @@ export const register = (data, push) => async (dispatch) => {
   }
 };
 
-export const login = (form, push) => async (dispatch) => {
+const login = (form, push) => async (dispatch) => {
   try{
     const result = await axios.post('/user/login', form)
     const user = result.data.data
@@ -29,4 +29,9 @@ export const login = (form, push) => async (dispatch) => {
       swal('Register error', error?.response?.data?.error[0]?.msg, 'error');
   }
   }
+}
+
+export{
+  login,
+  register
 }
