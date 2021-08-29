@@ -3,6 +3,10 @@ import styled, {createGlobalStyle} from 'styled-components';
 import Head from 'next/head';
 import AuthWrapper from '../../components/organisms/AuthWrapper';
 import InputAuthMolecul from '../../components/molecules/InputAuthMolecul';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/actions/userAction';
+import { useRouter } from 'next/router';
+
 const Globalstyle = createGlobalStyle`
 body{
     background-color: white;
@@ -29,6 +33,8 @@ const Wrapper = styled.div`
 `;
 
 const Login = () => {
+  const {push} = useRouter()
+  const dispatch = useDispatch()
   const [form, setform] = useState({
     email: '',
     password: '',
@@ -41,7 +47,7 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    console.log(form);
+    dispatch(login(form, push))
   };
   return (
     <Fragment>

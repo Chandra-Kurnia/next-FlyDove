@@ -15,3 +15,18 @@ export const register = (data, push) => async (dispatch) => {
     }
   }
 };
+
+export const login = (form, push) => async (dispatch) => {
+  try{
+    const result = await axios.post('/user/login', form)
+    const user = result.data.data
+    dispatch({type: 'USER_LOGIN', payload: user})
+    push('/')
+  }catch(error){
+    if(error?.response?.data?.error[0]?.msg === undefined){
+      swal('Register error', error?.response?.data?.message, 'error')
+  }else{
+      swal('Register error', error?.response?.data?.error[0]?.msg, 'error');
+  }
+  }
+}
