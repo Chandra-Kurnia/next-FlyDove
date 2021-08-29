@@ -15,6 +15,7 @@ const ImgWrapper = styled.div`
   width: 64px;
   height: 64px;
   /* margin-right: 20px; */
+  position: relative;
 `;
 
 const IMG = styled.img`
@@ -65,6 +66,7 @@ const Time = styled.span`
   font-size: small;
   color: var(--custom-grey);
 `;
+
 const Count = styled.span`
   background-color: var(--primary);
   display: flex;
@@ -78,12 +80,26 @@ const Count = styled.span`
   padding: 4px;
 `;
 
+const Active = styled.div`
+position: absolute;
+width: 23px;
+height: 23px;
+background-color: var(--primary);
+right: -5px;
+bottom: 0;
+border-radius: 50%;
+border: 5px solid white;
+`
+
 const CardChat = (props) => {
   return (
     <Fragment>
       <Wrapper className={props.className}>
         <ImgWrapper>
           <IMG src={profile.src} alt="" />
+          {props.active === true &&
+          <Active/>
+          }
         </ImgWrapper>
         <RowNameChat>
           <NameChat>

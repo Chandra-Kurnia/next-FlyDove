@@ -16,16 +16,16 @@ body{
 
 const Wrapper = styled.div`
   display: flex;
+  position: relative;
 `;
 
 const Chats = styled.div`
   width: 100%;
   background-color: white;
-  height: 20px;
   padding: 40px;
   border-right: 1px solid #e5e5e5;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -39,14 +39,17 @@ const Chats = styled.div`
 const Chat = styled.div`
   width: 0%;
   background-color: red;
-  height: 10vh;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  overflow-y: auto;
 
   @media (min-width: 768px) {
     width: 50%;
   }
 
   @media (min-width: 992px) {
-    width: 85%;
+    width: 75%;
   }
 `;
 
@@ -86,11 +89,36 @@ const Index = () => {
             onChange={(e) => console.log(e.target.value)}
             clickPlus={() => console.log('plus click')}
           />
-          <CardChat className='mt-3' name='Candra Kurniawaaaaaaaaaaaaaaaaaaaaan' count='7' LastChat='Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?'/>
-          <CardChat className='mt-3' name='Candra Kurniawaaaaaaaaaaaaaaaaaaaaan' count='70' LastChat='Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?'/>
-          <CardChat className='mt-3' name='Candra Kurniawaaaaaaaaaaaaaaaaaaaaan' count='76' LastChat='Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?'/>
+          <CardChat
+            className="mt-3"
+            name="Candra Kurniawaaaaaaaaaaaaaaaaaaaaan"
+            count="7"
+            LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+            active={true}
+          />
+          <CardChat
+            className="mt-3"
+            name="Candra Kurniawaaaaaaaaaaaaaaaaaaaaan"
+            count="70"
+            LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+            active={true}
+          />
+          <CardChat
+            className="mt-3"
+            name="Candra Kurniawaaaaaaaaaaaaaaaaaaaaan"
+            count="76"
+            LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+          />
+          <CardChat
+            className="mt-3"
+            name="Candra Kurniawaaaaaaaaaaaaaaaaaaaaan"
+            count="7"
+            LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+          />
         </Chats>
-        <Chat></Chat>
+        <Chat>
+
+        </Chat>
       </Wrapper>
     </Fragment>
   );
