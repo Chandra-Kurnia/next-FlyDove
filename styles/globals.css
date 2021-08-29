@@ -38,6 +38,10 @@ a {
   color: var(--primary);
 }
 
+.color-primary{
+  color: var(--primary);
+}
+
 /* fonts pack */
 @font-face{
   font-family: 'rubix-regular';
