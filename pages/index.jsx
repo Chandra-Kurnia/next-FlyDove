@@ -10,6 +10,7 @@ import CardChat from '../components/organisms/CardChat';
 import CardChatProfile from '../components/organisms/CardChatProfile';
 import ProfileImg from '../public/assets/img/profile.jpg';
 import SendMsg from '../components/molecules/SendMsg';
+import MsgBubblel from '../components/atoms/MsgBubblel';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -25,7 +26,7 @@ const Wrapper = styled.div`
 
 const Chats = styled.div`
   /* width: 100%; */
-  width: 0%;
+  width: 100%;
   background-color: white;
   padding: 40px;
   border-right: 1px solid #e5e5e5;
@@ -42,7 +43,6 @@ const Chats = styled.div`
 `;
 
 const Chat = styled.div`
-  /* width: 0%; */
   width: 100%;
   background-color: var(--bg-chat);
   height: 100vh;
@@ -77,12 +77,26 @@ const IMG = styled.img`
 const MSG = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute;
+  justify-content: flex-end;
+  min-height: 57vh;
   bottom: 130px;
+  padding: 0px 30px;
+  margin-top: 190px;
+  width: 100%;
+  @media (min-width: 768px) {
+    padding: 0px 40px;
+    min-height: 68vh;
+  }
+
+  @media (min-width: 992px) {
+    padding: 0px 66px;
+    min-height: 55vh;
+  }
 `;
 
 const Index = () => {
   const [dropMenu, setdropMenu] = useState(0);
+  const [OpenChat, setOpenChat] = useState(true);
   const [message, setmessage] = useState();
   const {profile} = useSelector((state) => state.userReducer);
   const handleSend = () => {
@@ -109,7 +123,7 @@ const Index = () => {
           />
           <CardChat
             className="mt-3"
-            name="Candra Kurniawaaaaaaaaaaaaaaaaaaaaan"
+            name="Candra Kurniawaan"
             count="7"
             LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
             active={true}
@@ -117,9 +131,19 @@ const Index = () => {
           />
         </Chats>
         <Chat>
-          <CardChatProfile name="Candra Kurniawan" active={true} img={ProfileImg.src} />
-          <MSG>a</MSG>
-          <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
+          {OpenChat ? (
+            <>
+              <CardChatProfile name="Candra Kurniawan" active={true} img={ProfileImg.src} />
+              <MSG>
+                <MsgBubblel msg="Halo" user={true} />
+                <MsgBubblel msg="Halo halo" user={true} />
+                <MsgBubblel msg="Halo halo halo" user={true} />
+              </MSG>
+              <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
+            </>
+          ) : (
+            'Please select a chat to start messaging'
+          )}
         </Chat>
       </Wrapper>
     </Fragment>

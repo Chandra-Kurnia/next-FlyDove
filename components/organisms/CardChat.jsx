@@ -8,9 +8,8 @@ const Wrapper = styled.div`
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  /* justify-content: space-around; */
+  cursor: pointer;
 `;
-
 
 const RowNameChat = styled.div`
   width: 80%;
