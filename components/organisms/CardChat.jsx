@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import {Fragment} from 'react';
 import styled from 'styled-components';
-import profile from '../../public/assets/img/profile.jpg';
+import ImgProfile from '../molecules/ImgProfile';
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,19 +11,6 @@ const Wrapper = styled.div`
   /* justify-content: space-around; */
 `;
 
-const ImgWrapper = styled.div`
-  width: 64px;
-  height: 64px;
-  /* margin-right: 20px; */
-  position: relative;
-`;
-
-const IMG = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-`;
 
 const RowNameChat = styled.div`
   width: 80%;
@@ -80,27 +67,11 @@ const Count = styled.span`
   padding: 4px;
 `;
 
-const Active = styled.div`
-position: absolute;
-width: 23px;
-height: 23px;
-background-color: var(--primary);
-right: -5px;
-bottom: 0;
-border-radius: 50%;
-border: 5px solid white;
-`
-
 const CardChat = (props) => {
   return (
     <Fragment>
       <Wrapper className={props.className}>
-        <ImgWrapper>
-          <IMG src={profile.src} alt="" />
-          {props.active === true &&
-          <Active/>
-          }
-        </ImgWrapper>
+        <ImgProfile active={props.active} src={props.img}/>
         <RowNameChat>
           <NameChat>
             <Name>{props.name}</Name>

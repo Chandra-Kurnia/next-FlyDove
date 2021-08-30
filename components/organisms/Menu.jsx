@@ -18,6 +18,7 @@ const Wrapper = styled.div`
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
     border-top-right-radius: 20px;
+    z-index: 99;
 `
 
 const Menu = (props) => {

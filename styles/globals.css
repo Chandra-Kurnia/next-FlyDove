@@ -42,6 +42,10 @@ a {
   color: var(--primary);
 }
 
+.color-red{
+  color: var(--custom-red);
+}
+
 /* fonts pack */
 @font-face{
   font-family: 'rubix-regular';
