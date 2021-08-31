@@ -69,7 +69,7 @@ const Count = styled.span`
 const CardChat = (props) => {
   return (
     <Fragment>
-      <Wrapper className={props.className}>
+      <Wrapper className={props.className} onClick={props.onClick}>
         <ImgProfile active={props.active} src={props.img}/>
         <RowNameChat>
           <NameChat>

@@ -67,3 +67,24 @@ a {
   font-style: normal;
   font-display: swap;
 }
+
+@font-face{
+  font-family: 'speciment';
+  src: url('../public/fonts/Thespeciment-JRZAa.ttf');
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face{
+  font-family: 'connie';
+  src: url('../public/fonts/Connie-LGWE.ttf');
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face{
+  font-family: 'raphtalia';
+  src: url('../public/fonts/Raphtalia-2ZmK.ttf');
+  font-style: normal;
+  font-display: swap;
+}

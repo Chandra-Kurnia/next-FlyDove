@@ -8,30 +8,27 @@ const register = (data, push) => async (dispatch) => {
       push('/auth/login');
     });
   } catch (error) {
-    if(error?.response?.data?.error[0]?.msg === undefined){
-        swal('Register error', error?.response?.data?.message, 'error')
-    }else{
-        swal('Register error', error?.response?.data?.error[0]?.msg, 'error');
+    if (error?.response?.data?.error[0]?.msg === undefined) {
+      swal('Register error', error?.response?.data?.message, 'error');
+    } else {
+      swal('Register error', error?.response?.data?.error[0]?.msg, 'error');
     }
   }
 };
 
 const login = (form, push) => async (dispatch) => {
-  try{
-    const result = await axios.post('/user/login', form)
-    const user = result.data.data
-    dispatch({type: 'USER_LOGIN', payload: user})
-    push('/')
-  }catch(error){
-    if(error?.response?.data?.error[0]?.msg === undefined){
-      swal('Register error', error?.response?.data?.message, 'error')
-  }else{
-      swal('Register error', error?.response?.data?.error[0]?.msg, 'error');
+  try {
+    const result = await axios.post('/user/login', form);
+    const user = result.data.data;
+    dispatch({type: 'USER_LOGIN', payload: user});
+    push('/');
+  } catch (error) {
+    if (error?.response?.data?.error[0]?.msg === undefined) {
+      swal('Login failed', error?.response?.data?.message, 'error');
+    } else {
+      swal('Login failed', error?.response?.data?.error[0]?.msg, 'error');
+    }
   }
-  }
-}
+};
 
-export{
-  login,
-  register
-}
+export {login, register};

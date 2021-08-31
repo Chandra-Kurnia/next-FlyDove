@@ -32,7 +32,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Login = () => {
+const Login = (props) => {
   const {push} = useRouter()
   const dispatch = useDispatch()
   const [form, setform] = useState({

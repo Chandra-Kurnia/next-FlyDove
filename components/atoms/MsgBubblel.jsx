@@ -1,5 +1,6 @@
 import {Fragment} from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 const BubbleSender = styled.div`
   background-color: var(--primary);
@@ -45,17 +46,39 @@ const RecieverWrapper = styled.div`
   justify-content: flex-end;
 `;
 
+const Time = styled.span`
+  display: block;
+  width: 100%;
+  text-align: right;
+  margin-top: 3px;
+  font-size: small;
+`;
+
+const Time2 = styled.span`
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 3px;
+  font-size: small;
+`;
+
 const MsgBubblel = (props) => {
   return (
     <Fragment>
       {props.user === true ? (
-        <RecieverWrapper>
-          <BubbleUser>{props.msg}</BubbleUser>
-        </RecieverWrapper>
+        <>
+          <RecieverWrapper>
+            <BubbleUser>{props.msg}</BubbleUser>
+          </RecieverWrapper>
+          <Time>{moment(props.time).format('LT')}</Time>
+        </>
       ) : (
-        <SenderWrapper>
-          <BubbleSender>{props.msg}</BubbleSender>
-        </SenderWrapper>
+        <>
+          <SenderWrapper>
+            <BubbleSender>{props.msg}</BubbleSender>
+          </SenderWrapper>
+          <Time2>{moment(props.time2).format('LT')}</Time2>
+        </>
       )}
     </Fragment>
   );
