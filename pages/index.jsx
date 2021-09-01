@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Fragment} from 'react';
 import Head from 'next/head';
@@ -18,6 +19,9 @@ import {logout, updateProfile} from '../redux/actions/userAction';
 import {useDispatch} from 'react-redux';
 import NoMessage from '../components/molecules/NoMessage';
 import SideProfile from '../components/organisms/SideProfile';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import notif from '../public/assets/icons/notif.svg'
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -135,12 +139,12 @@ const Index = (props) => {
   const {push} = useRouter();
   const users = props.datausers;
   const token = props.cookie;
-  const [user, setuser] = useState(props.dataUser)
+  const [user, setuser] = useState(props.dataUser);
   const [dropMenu, setdropMenu] = useState(0);
   const [message, setmessage] = useState();
   const [messages, setmessages] = useState([]);
   const [socket, setsocket] = useState();
-  const [userInChat, setuserInChat] = useState();
+  const [userInChat, setuserInChat] = useState({});
   const [profileMenu, setprofileMenu] = useState(0);
   const [avatar, setavatar] = useState(`${process.env.API_SERVER_URL}${user.avatar}`);
   const dispatch = useDispatch();
@@ -164,17 +168,22 @@ const Index = (props) => {
 
   useEffect(() => {
     if (socket) {
+      socket.off('msgFromBackEnd');
       socket.on('msgFromBackEnd', (msg) => {
-        setmessages((old) => {
-          // if(userInChat.user_id == msg.sender_id){
-          return [...old, msg];
-          // }else{
-          //   return [...old];
-          // }
-        });
+        if(userInChat.user_id === msg.sender_id){
+          setmessages((old) => {
+            return [...old, msg];
+          });
+        }else{
+          toast(msg.message, {
+            position: 'top-center',
+            icon: <img src={notif.src} alt="" />,
+            closeOnClick: true,
+          })
+        }
       });
     }
-  }, [socket]);
+  }, [socket, userInChat.user_id]);
 
   const handleSend = () => {
     {
@@ -226,22 +235,24 @@ const Index = (props) => {
     formData.append('phone_number', formProfile.phone_number);
     formData.append('bio', formProfile.bio);
     formData.append('avatar', formProfile.avatar);
-    axios.post('/user/updateuser', formData)
-    .then((res) => {
-      const newToken = res.data.data.token
-      axios.get('/user/checktoken', {headers: {cookie: newToken}})
-      .then((newData) => {
-        setuser(newData.data.data)
-        swal('Success', 'Profile updated successfully', 'success');
+    axios
+      .post('/user/updateuser', formData)
+      .then((res) => {
+        const newToken = res.data.data.token;
+        axios
+          .get('/user/checktoken', {headers: {cookie: newToken}})
+          .then((newData) => {
+            setuser(newData.data.data);
+            swal('Success', 'Profile updated successfully', 'success');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
-      })
-    })
-    .catch(err => {
-      console.log(err);
-      swal('Update profile error', 'please try again later', 'error');
-    })
+        swal('Update profile error', 'please try again later', 'error');
+      });
   };
 
   return (
@@ -300,7 +311,7 @@ const Index = (props) => {
           )}
         </Chats>
         <Chat>
-          {messages.length > 0 ? (
+          {userInChat.user_id ? (
             <>
               <CardChatProfile
                 name={userInChat.name}
@@ -321,6 +332,7 @@ const Index = (props) => {
                   ))}
               </MSG>
               <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
+              <ToastContainer limit={2}/>
             </>
           ) : (
             <NoMessage />
