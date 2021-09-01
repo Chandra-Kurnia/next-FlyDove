@@ -43,4 +43,18 @@ const logout = (push) => async () => {
   }
 };
 
-export {login, register, logout};
+const updateProfile = (data) => async(dispatch) => {
+  try{
+    const formData = new FormData();
+    formData.append('username', data.username);
+    formData.append('phone_number', data.phone_number);
+    formData.append('bio', data.bio);
+    formData.append('avatar', data.avatar);
+    await axios.post('/user/updateuser', formData)
+    swal('Success', 'Your data succesfully updated', 'success')
+  }catch(err){
+    swal('Register error', error?.response?.data?.message, 'error');
+  }
+}
+
+export {login, register, logout, updateProfile};

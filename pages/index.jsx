@@ -14,7 +14,7 @@ import {io} from 'socket.io-client';
 import {default as axios} from '../configs/axios';
 import {useRouter} from 'next/router';
 import swal from 'sweetalert';
-import {logout} from '../redux/actions/userAction';
+import {logout, updateProfile} from '../redux/actions/userAction';
 import {useDispatch} from 'react-redux';
 import NoMessage from '../components/molecules/NoMessage';
 import SideProfile from '../components/organisms/SideProfile';
@@ -133,16 +133,23 @@ export const getServerSideProps = async (ctx) => {
 
 const Index = (props) => {
   const {push} = useRouter();
-  const user = props.dataUser;
   const users = props.datausers;
   const token = props.cookie;
+  const [user, setuser] = useState(props.dataUser)
   const [dropMenu, setdropMenu] = useState(0);
   const [message, setmessage] = useState();
   const [messages, setmessages] = useState([]);
   const [socket, setsocket] = useState();
   const [userInChat, setuserInChat] = useState();
-  const [profile, setprofile] = useState(0);
+  const [profileMenu, setprofileMenu] = useState(0);
+  const [avatar, setavatar] = useState(`${process.env.API_SERVER_URL}${user.avatar}`);
   const dispatch = useDispatch();
+  const [formProfile, setformProfile] = useState({
+    username: user.username || '',
+    phone_number: user.phone_number || '',
+    avatar: '',
+    bio: user.bio || '',
+  });
 
   useEffect(() => {
     if (!socket) {
@@ -197,6 +204,46 @@ const Index = (props) => {
     dispatch(logout(push));
   };
 
+  const hanldeFormUpdateProfile = (e) => {
+    setformProfile({
+      ...formProfile,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleAvatar = (e) => {
+    const urlImg = URL.createObjectURL(e.target.files[0]);
+    setavatar(urlImg);
+    setformProfile({
+      ...formProfile,
+      avatar: e.target.files[0],
+    });
+  };
+
+  const handleUpdateProfile = () => {
+    const formData = new FormData();
+    formData.append('username', formProfile.username);
+    formData.append('phone_number', formProfile.phone_number);
+    formData.append('bio', formProfile.bio);
+    formData.append('avatar', formProfile.avatar);
+    axios.post('/user/updateuser', formData)
+    .then((res) => {
+      const newToken = res.data.data.token
+      axios.get('/user/checktoken', {headers: {cookie: newToken}})
+      .then((newData) => {
+        setuser(newData.data.data)
+        swal('Success', 'Profile updated successfully', 'success');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    })
+    .catch(err => {
+      console.log(err);
+      swal('Update profile error', 'please try again later', 'error');
+    })
+  };
+
   return (
     <Fragment>
       <Head>
@@ -205,7 +252,7 @@ const Index = (props) => {
       <Globalstyle />
       <Wrapper>
         <Chats>
-          {profile === 0 ? (
+          {profileMenu === 0 ? (
             <>
               <Banner>
                 <Textbanner>FlyDove</Textbanner>
@@ -215,7 +262,7 @@ const Index = (props) => {
                   onClick={() => (dropMenu === 0 ? setdropMenu(1) : setdropMenu(0))}
                 />
               </Banner>
-              {dropMenu === 1 && <Menu logoutEvt={handleLogout} profileEvt={() => setprofile(1)}/>}
+              {dropMenu === 1 && <Menu logoutEvt={handleLogout} profileEvt={() => setprofileMenu(1)} />}
               <SearchChat
                 className="ms-0 ms-lg-4 ms-md-2 mt-3 mt-md-4 mt-lg-5"
                 // onChange={(e) => console.log(e.target.value)}
@@ -226,7 +273,7 @@ const Index = (props) => {
                   <CardChat
                     key={index}
                     className="mt-3"
-                    name={user.name}
+                    name={user.username ? user.username : user.name}
                     count="0"
                     LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
                     active={user.online === 1 ? true : false}
@@ -236,7 +283,20 @@ const Index = (props) => {
                 ))}
             </>
           ) : (
-            <SideProfile name={user.name} img={`${process.env.API_SERVER_URL}${user.avatar}`} OutProfile={() => {setprofile(0); setdropMenu(0)}}/>
+            <SideProfile
+              name={user.name}
+              phone_number={user.phone_number}
+              bio={user.bio}
+              username={user.username ? user.username : user.name}
+              img={avatar}
+              OutProfile={() => {
+                setprofileMenu(0);
+                setdropMenu(0);
+              }}
+              onChange={(e) => hanldeFormUpdateProfile(e)}
+              onUpdate={handleUpdateProfile}
+              onUpload={(e) => handleAvatar(e)}
+            />
           )}
         </Chats>
         <Chat>

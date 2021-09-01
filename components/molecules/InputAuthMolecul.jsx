@@ -12,7 +12,7 @@ const InputAuthMolecul = (props) => {
     <Fragment>
       <div className={props.className}>
         <Label className="d-block">{props.label}</Label>
-        <InputAuth placeholder={props.placeholder} type={props.type} name={props.name} onChange={(e) => props.onChange(e)} />
+        <InputAuth placeholder={props.placeholder} type={props.type} name={props.name} onChange={(e) => props.onChange(e)} defaultValue={props.defaultValue}/>
       </div>
     </Fragment>
   );

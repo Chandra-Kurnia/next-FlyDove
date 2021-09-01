@@ -22,7 +22,7 @@ const Input = styled.input`
 const InputAuth = (props) => {
   return (
     <Fragment>
-      <Input className={props.className} onChange={(e) => props.onChange(e)} placeholder={props.placeholder} type={props.type} name={props.name}/>
+      <Input className={props.className} onChange={(e) => props.onChange(e)} placeholder={props.placeholder} type={props.type} name={props.name} defaultValue={props.defaultValue}/>
     </Fragment>
   );
 };
