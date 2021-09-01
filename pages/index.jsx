@@ -2,20 +2,22 @@
 import {Fragment} from 'react';
 import Head from 'next/head';
 import styled, {createGlobalStyle} from 'styled-components';
-import {useSelector} from 'react-redux';
 import menu from '../public/assets/icons/menu.svg';
 import Menu from '../components/organisms/Menu';
 import {useState, useEffect} from 'react';
 import SearchChat from '../components/molecules/SearchChat';
 import CardChat from '../components/organisms/CardChat';
 import CardChatProfile from '../components/organisms/CardChatProfile';
-import ProfileImg from '../public/assets/img/profile.jpg';
 import SendMsg from '../components/molecules/SendMsg';
 import MsgBubblel from '../components/atoms/MsgBubblel';
 import {io} from 'socket.io-client';
 import {default as axios} from '../configs/axios';
 import {useRouter} from 'next/router';
 import swal from 'sweetalert';
+import {logout} from '../redux/actions/userAction';
+import {useDispatch} from 'react-redux';
+import NoMessage from '../components/molecules/NoMessage';
+import SideProfile from '../components/organisms/SideProfile';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -49,7 +51,7 @@ const Chats = styled.div`
 
 const Chat = styled.div`
   /* width: 50%; */
-  width: 100%;
+  width: 0%;
   background-color: var(--bg-chat);
   height: 100vh;
   position: fixed;
@@ -130,6 +132,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 const Index = (props) => {
+  const {push} = useRouter();
   const user = props.dataUser;
   const users = props.datausers;
   const token = props.cookie;
@@ -138,12 +141,15 @@ const Index = (props) => {
   const [messages, setmessages] = useState([]);
   const [socket, setsocket] = useState();
   const [userInChat, setuserInChat] = useState();
+  const [profile, setprofile] = useState(0);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!socket) {
       const socket = io('http://localhost:4000', {
         query: {
-          token: token
-        }
+          token: token,
+        },
       });
       setsocket(socket);
     }
@@ -152,26 +158,26 @@ const Index = (props) => {
   useEffect(() => {
     if (socket) {
       socket.on('msgFromBackEnd', (msg) => {
-          setmessages((old) => {
-            // if(userInChat.user_id == msg.sender_id){
-              return [...old, msg];
-            // }else{
-            //   return [...old];
-            // }
-          })
-      }
-      );
+        setmessages((old) => {
+          // if(userInChat.user_id == msg.sender_id){
+          return [...old, msg];
+          // }else{
+          //   return [...old];
+          // }
+        });
+      });
     }
   }, [socket]);
 
   const handleSend = () => {
-    {message && 
-      socket.emit('sendmsg', {message, recipient_id: userInChat.user_id}, (cbBackend) => {
-        console.log(cbBackend);
-        setmessages((old) => {
-          return [...old, cbBackend];
-        })
-      });
+    {
+      message &&
+        socket.emit('sendmsg', {message, recipient_id: userInChat.user_id}, (cbBackend) => {
+          console.log(cbBackend);
+          setmessages((old) => {
+            return [...old, cbBackend];
+          });
+        });
       setmessage('');
     }
   };
@@ -180,11 +186,15 @@ const Index = (props) => {
     try {
       const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {token}});
       const userChat = await axios.get(`user/showbyid/${user_id}`);
-      setuserInChat(userChat.data.data)
+      setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
     } catch (error) {
       swal('Error', 'Cant get data chat, please try again later', 'error');
     }
+  };
+
+  const handleLogout = () => {
+    dispatch(logout(push));
   };
 
   return (
@@ -195,46 +205,65 @@ const Index = (props) => {
       <Globalstyle />
       <Wrapper>
         <Chats>
-          <Banner>
-            <Textbanner>FlyDove</Textbanner>
-            <IMG src={menu.src} alt="menu-icon" onClick={() => (dropMenu === 0 ? setdropMenu(1) : setdropMenu(0))} />
-          </Banner>
-          {dropMenu === 1 && <Menu />}
-          <SearchChat
-            className="ms-0 ms-lg-4 ms-md-2 mt-3 mt-md-4 mt-lg-5"
-            // onChange={(e) => console.log(e.target.value)}
-            // clickPlus={() => console.log('plus click')}
-          />
-          {users &&
-            users.map((user, index) => (
-              <CardChat
-                key={index}
-                className="mt-3"
-                name={user.name}
-                count="7"
-                LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
-                active={user.online === 1 ? true : false}
-                img={`${process.env.API_SERVER_URL}${user.avatar}`}
-                onClick={() => getMessages(user.user_id)}
+          {profile === 0 ? (
+            <>
+              <Banner>
+                <Textbanner>FlyDove</Textbanner>
+                <IMG
+                  src={menu.src}
+                  alt="menu-icon"
+                  onClick={() => (dropMenu === 0 ? setdropMenu(1) : setdropMenu(0))}
+                />
+              </Banner>
+              {dropMenu === 1 && <Menu logoutEvt={handleLogout} profileEvt={() => setprofile(1)}/>}
+              <SearchChat
+                className="ms-0 ms-lg-4 ms-md-2 mt-3 mt-md-4 mt-lg-5"
+                // onChange={(e) => console.log(e.target.value)}
+                // clickPlus={() => console.log('plus click')}
               />
-            ))}
+              {users &&
+                users.map((user, index) => (
+                  <CardChat
+                    key={index}
+                    className="mt-3"
+                    name={user.name}
+                    count="0"
+                    LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+                    active={user.online === 1 ? true : false}
+                    img={`${process.env.API_SERVER_URL}${user.avatar}`}
+                    onClick={() => getMessages(user.user_id)}
+                  />
+                ))}
+            </>
+          ) : (
+            <SideProfile name={user.name} img={`${process.env.API_SERVER_URL}${user.avatar}`} OutProfile={() => {setprofile(0); setdropMenu(0)}}/>
+          )}
         </Chats>
         <Chat>
           {messages.length > 0 ? (
             <>
-              <CardChatProfile name={userInChat.name} active={userInChat.online} img={`${process.env.API_SERVER_URL}${userInChat.avatar}`} />
+              <CardChatProfile
+                name={userInChat.name}
+                active={userInChat.online}
+                img={`${process.env.API_SERVER_URL}${userInChat.avatar}`}
+              />
               <MSG>
                 {messages &&
                   messages.map((message, index) => (
                     <>
-                    <MsgBubblel key={index} msg={message.message} user={user.user_id === message.sender_id} time={message.time}/>
+                      <MsgBubblel
+                        key={index}
+                        msg={message.message}
+                        user={user.user_id === message.sender_id}
+                        time={message.time}
+                      />
                     </>
                   ))}
               </MSG>
               <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
             </>
           ) : (
-            'Please select a chat to start messaging'
+            <NoMessage />
           )}
         </Chat>
       </Wrapper>

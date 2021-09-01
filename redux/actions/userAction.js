@@ -31,4 +31,16 @@ const login = (form, push) => async (dispatch) => {
   }
 };
 
-export {login, register};
+const logout = (push) => async () => {
+  try {
+    axios.get('user/logout').then(() => {
+      swal('Success', 'Logout success', 'success').then(() => {
+        push('/auth/login');
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export {login, register, logout};

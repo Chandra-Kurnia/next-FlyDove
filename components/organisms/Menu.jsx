@@ -7,6 +7,7 @@ import call from '../../public/assets/icons/menus/call.svg'
 import mark from '../../public/assets/icons/menus/mark.svg'
 import invite from '../../public/assets/icons/menus/invite.svg'
 import faq from '../../public/assets/icons/menus/faq.svg'
+import logout from '../../public/assets/icons/logout.png'
 
 const Wrapper = styled.div`
     width: 70%;
@@ -25,12 +26,14 @@ const Menu = (props) => {
     return (
         <Fragment>
             <Wrapper>
-            <MenuItem src={settings} text='Setings' onClick={props.settingsEvt}/>
+            <MenuItem src={contact} text='Profile' onClick={props.profileEvt}/>
+            <MenuItem src={logout} text='Logout' onClick={props.logoutEvt}/>
+            {/* <MenuItem src={settings} text='Setings' onClick={props.settingsEvt}/>
             <MenuItem src={contact} text='Contact' onClick={props.contactEvt}/>
             <MenuItem src={call} text='Calls' onClick={props.callsEvt}/>
             <MenuItem src={mark} text='Save message' onClick={props.savemessageEvt}/>
             <MenuItem src={invite} text='Invite Friends' onClick={props.inviterEvt}/>
-            <MenuItem src={faq} text='Telegram FAQ' onClick={props.faqEvt}/>
+            <MenuItem src={faq} text='Telegram FAQ' onClick={props.faqEvt}/> */}
             </Wrapper>
         </Fragment>
     );

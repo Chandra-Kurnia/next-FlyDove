@@ -22,7 +22,7 @@ const MenuItem = (props) => {
     return (
         <Fragment>
             <Wrapper>       
-                <Image src={props.src} alt='menuicon'/>
+                <Image src={props.src} alt='menuicon' width='20px' height='20px'/>
                 <Span className='ps-4' onClick={props.onClick}>{props.text}</Span>
             </Wrapper>
         </Fragment>
