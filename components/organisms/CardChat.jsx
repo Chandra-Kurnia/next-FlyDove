@@ -2,6 +2,7 @@
 import {Fragment} from 'react';
 import styled from 'styled-components';
 import ImgProfile from '../molecules/ImgProfile';
+import moment from 'moment';
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,7 +58,8 @@ const Count = styled.span`
   background-color: var(--primary);
   display: flex;
   width: max-content;
-  height: 18px;
+  min-width: 20px;
+  height: 20px;
   color: white;
   align-items: center;
   justify-content: center;
@@ -79,7 +81,7 @@ const CardChat = (props) => {
             </LastChat>
           </NameChat>
           <TimeCount>
-            <Time>12:00</Time>
+            <Time>{moment(props.time).format('LT')}</Time>
             {props.count > 0 && <Count>{props.count}</Count>}
           </TimeCount>
         </RowNameChat>

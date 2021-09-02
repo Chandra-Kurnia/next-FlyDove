@@ -122,7 +122,7 @@ export const getServerSideProps = async (ctx) => {
   try {
     const cookie = ctx.req.headers.cookie || '';
     const ResdataUser = await axios.get('/user/checktoken', {headers: {cookie}});
-    const ResAllDataUser = await axios.get('/user/getallusers', {headers: {cookie}});
+    const ResAllDataUser = await axios.get('/user/userinchat', {headers: {cookie}});
     const dataUser = ResdataUser.data.data;
     const datausers = ResAllDataUser.data.data;
     return {
@@ -147,11 +147,11 @@ export const getServerSideProps = async (ctx) => {
 };
 
 const Index = (props) => {
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-  const validator = useRef(new SimpleReactValidator({ className: 'fs-1 text-danger' }));
+    messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
+  };
+  const validator = useRef(new SimpleReactValidator({className: 'fs-1 text-danger'}));
   const {push} = useRouter();
   const users = props.datausers;
   const token = props.cookie;
@@ -164,7 +164,7 @@ const Index = (props) => {
   const [profileMenu, setprofileMenu] = useState(0);
   const [avatar, setavatar] = useState(`${process.env.API_SERVER_URL}${user.avatar}`);
   const [lastMSG, setlastMSG] = useState('');
-  const [controlWidth, setcontrolWidth] = useState(0)
+  const [controlWidth, setcontrolWidth] = useState(0);
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -205,9 +205,8 @@ const Index = (props) => {
   }, [socket, userInChat.user_id]);
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToBottom();
   }, [messages]);
-
 
   const handleSend = () => {
     {
@@ -229,7 +228,7 @@ const Index = (props) => {
       const userChat = await axios.get(`user/showbyid/${user_id}`);
       setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
-      setcontrolWidth(1)
+      setcontrolWidth(1);
       setlastMSG(dataMessages.data.data[dataMessages.data.data.length - 1]);
       console.log(lastMSG);
     } catch (error) {
@@ -334,23 +333,22 @@ const Index = (props) => {
                 // clickPlus={() => console.log('plus click')}
               />
               {users &&
-                users.map((user, index) => (
-                  <CardChat
-                    key={index}
-                    className="mt-3"
-                    name={user.username ? user.username : user.name}
-                    count="0"
-                    // LastChat={`Message from ${user.username ? user.username : user.name}`}
-                    LastChat={
-                      lastMSG && (lastMSG.recipient_id == user.user_id) | (lastMSG.sender_id == user.user_id)
-                        ? lastMSG.message
-                        : ''
-                    }
-                    active={user.online === 1 ? true : false}
-                    img={`${process.env.API_SERVER_URL}${user.avatar}`}
-                    onClick={() => getMessages(user.user_id)}
-                  />
-                ))}
+                users.map(
+                  (user, index) =>
+                    user !== null && (
+                      <CardChat
+                        key={index}
+                        className="mt-3"
+                        name={user.username ? user.username : user.name}
+                        count={user.unread}
+                        LastChat={user.message}
+                        active={user.online === 1 ? true : false}
+                        img={`${process.env.API_SERVER_URL}${user.avatar}`}
+                        time={user.time}
+                        onClick={() => getMessages(user.user_id)}
+                      />
+                    )
+                )}
             </>
           ) : (
             <SideProfile
@@ -373,7 +371,7 @@ const Index = (props) => {
           {userInChat.user_id ? (
             <>
               <CardChatProfile
-              backChats={() => setcontrolWidth(0)}
+                backChats={() => setcontrolWidth(0)}
                 name={userInChat.name}
                 active={userInChat.online}
                 img={`${process.env.API_SERVER_URL}${userInChat.avatar}`}
@@ -391,7 +389,7 @@ const Index = (props) => {
                       />
                     </>
                   ))}
-                  <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} />
               </MSG>
               <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
               <ToastContainer limit={2} />
