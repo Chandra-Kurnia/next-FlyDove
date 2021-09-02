@@ -46,6 +46,33 @@ a {
   color: var(--custom-red);
 }
 
+.control-width-chats{
+  width: 0% !important;
+}
+
+.control-width-chat{
+  width: 100% !important;
+}
+
+@media (min-width: 768px) {
+  .control-width-chats{
+    width: 50% !important;
+  }
+  .control-width-chat{
+    width: 50% !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .control-width-chats{
+    width: 25% !important;
+  }
+  .control-width-chat{
+    width: 75% !important;
+  }
+}
+
+
 /* fonts pack */
 @font-face{
   font-family: 'rubix-regular';

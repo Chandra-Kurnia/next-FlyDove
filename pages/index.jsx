@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Fragment} from 'react';
+import {Fragment, useRef} from 'react';
 import Head from 'next/head';
 import styled, {createGlobalStyle} from 'styled-components';
 import menu from '../public/assets/icons/menu.svg';
@@ -15,13 +15,14 @@ import {io} from 'socket.io-client';
 import {default as axios} from '../configs/axios';
 import {useRouter} from 'next/router';
 import swal from 'sweetalert';
-import {logout, updateProfile} from '../redux/actions/userAction';
+import {logout} from '../redux/actions/userAction';
 import {useDispatch} from 'react-redux';
 import NoMessage from '../components/molecules/NoMessage';
 import SideProfile from '../components/organisms/SideProfile';
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import notif from '../public/assets/icons/notif.svg'
+import notif from '../public/assets/icons/notif.svg';
+import SimpleReactValidator from 'simple-react-validator';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -33,16 +34,24 @@ const Wrapper = styled.div`
   display: flex;
   position: relative;
   width: 100%;
+
+  @media (min-width: 768px) {
+    width: 100%;
+  }
+
+  @media (min-width: 992px) {
+    width: 100%;
+  }
 `;
 
 const Chats = styled.div`
   width: 100%;
-  /* width: 50%; */
   background-color: white;
   padding: 40px;
   border-right: 1px solid #e5e5e5;
   position: relative;
   min-height: 100vh;
+  transition: all 200ms ease-in-out;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -50,11 +59,11 @@ const Chats = styled.div`
 
   @media (min-width: 992px) {
     width: 25%;
+    /* width: 100%; */
   }
 `;
 
 const Chat = styled.div`
-  /* width: 50%; */
   width: 0%;
   background-color: var(--bg-chat);
   height: 100vh;
@@ -62,6 +71,7 @@ const Chat = styled.div`
   right: 0;
   overflow-y: auto;
   padding-bottom: 130px;
+  transition: all 200ms ease-in-out;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -76,6 +86,7 @@ const Textbanner = styled.h1`
   color: var(--primary);
   font-weight: bolder;
   font-family: raphtalia;
+  /* font-size: 400px; */
 `;
 
 const Banner = styled.div`
@@ -136,6 +147,11 @@ export const getServerSideProps = async (ctx) => {
 };
 
 const Index = (props) => {
+  const messagesEndRef = useRef(null)
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+  const validator = useRef(new SimpleReactValidator({ className: 'fs-1 text-danger' }));
   const {push} = useRouter();
   const users = props.datausers;
   const token = props.cookie;
@@ -147,6 +163,8 @@ const Index = (props) => {
   const [userInChat, setuserInChat] = useState({});
   const [profileMenu, setprofileMenu] = useState(0);
   const [avatar, setavatar] = useState(`${process.env.API_SERVER_URL}${user.avatar}`);
+  const [lastMSG, setlastMSG] = useState('');
+  const [controlWidth, setcontrolWidth] = useState(0)
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -157,7 +175,7 @@ const Index = (props) => {
 
   useEffect(() => {
     if (!socket) {
-      const socket = io('http://localhost:4000', {
+      const socket = io(process.env.API_SERVER_URL, {
         query: {
           token: token,
         },
@@ -170,25 +188,32 @@ const Index = (props) => {
     if (socket) {
       socket.off('msgFromBackEnd');
       socket.on('msgFromBackEnd', (msg) => {
-        if(userInChat.user_id === msg.sender_id){
+        setlastMSG(msg);
+        if (userInChat.user_id === msg.sender_id) {
           setmessages((old) => {
             return [...old, msg];
           });
-        }else{
-          toast(msg.message, {
+        } else {
+          toast.info(`NEW MESSAGE FROM ${msg.sender_name}`, {
             position: 'top-center',
             icon: <img src={notif.src} alt="" />,
             closeOnClick: true,
-          })
+          });
         }
       });
     }
   }, [socket, userInChat.user_id]);
 
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages]);
+
+
   const handleSend = () => {
     {
       message &&
-        socket.emit('sendmsg', {message, recipient_id: userInChat.user_id}, (cbBackend) => {
+        socket.emit('sendmsg', {message, recipient_id: userInChat.user_id, sender_name: user.name}, (cbBackend) => {
+          setlastMSG(cbBackend);
           console.log(cbBackend);
           setmessages((old) => {
             return [...old, cbBackend];
@@ -204,8 +229,12 @@ const Index = (props) => {
       const userChat = await axios.get(`user/showbyid/${user_id}`);
       setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
+      setcontrolWidth(1)
+      setlastMSG(dataMessages.data.data[dataMessages.data.data.length - 1]);
+      console.log(lastMSG);
     } catch (error) {
       swal('Error', 'Cant get data chat, please try again later', 'error');
+      push('/auth/login');
     }
   };
 
@@ -250,19 +279,44 @@ const Index = (props) => {
           });
       })
       .catch((err) => {
-        console.log(err);
-        swal('Update profile error', 'please try again later', 'error');
+        swal('Update profile error', err.response.data.message, 'error').then(() => {
+          setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
+        });
       });
+  };
+
+  const handleDeleteMessage = (message_id, user_id) => {
+    swal({
+      title: 'Are you sure?',
+      text: 'Once deleted, you will not be able to recover this message',
+      icon: 'warning',
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`/messages/delete/${message_id}`)
+          .then(async () => {
+            const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {token}});
+            setmessages(dataMessages.data.data);
+            swal('Success', 'Message successfully deleted', 'success');
+          })
+          .catch((err) => {
+            console.log(err.response);
+            swal('Failed', 'Delete message failed, please try again later', 'error');
+          });
+      }
+    });
   };
 
   return (
     <Fragment>
       <Head>
-        <title>Telegram | Home</title>
+        <title>FlyDove | {user.username ? user.username : user.name}</title>
       </Head>
       <Globalstyle />
       <Wrapper>
-        <Chats>
+        <Chats className={controlWidth === 1 && 'control-width-chats'}>
           {profileMenu === 0 ? (
             <>
               <Banner>
@@ -286,7 +340,12 @@ const Index = (props) => {
                     className="mt-3"
                     name={user.username ? user.username : user.name}
                     count="0"
-                    LastChat="Why did you do that? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur odio earum at?"
+                    // LastChat={`Message from ${user.username ? user.username : user.name}`}
+                    LastChat={
+                      lastMSG && (lastMSG.recipient_id == user.user_id) | (lastMSG.sender_id == user.user_id)
+                        ? lastMSG.message
+                        : ''
+                    }
                     active={user.online === 1 ? true : false}
                     img={`${process.env.API_SERVER_URL}${user.avatar}`}
                     onClick={() => getMessages(user.user_id)}
@@ -310,10 +369,11 @@ const Index = (props) => {
             />
           )}
         </Chats>
-        <Chat>
+        <Chat className={controlWidth === 1 && 'control-width-chat'}>
           {userInChat.user_id ? (
             <>
               <CardChatProfile
+              backChats={() => setcontrolWidth(0)}
                 name={userInChat.name}
                 active={userInChat.online}
                 img={`${process.env.API_SERVER_URL}${userInChat.avatar}`}
@@ -327,12 +387,14 @@ const Index = (props) => {
                         msg={message.message}
                         user={user.user_id === message.sender_id}
                         time={message.time}
+                        onClick={() => handleDeleteMessage(message.message_id, userInChat.user_id)}
                       />
                     </>
                   ))}
+                  <div ref={messagesEndRef} />
               </MSG>
               <SendMsg value={message} onChange={(e) => setmessage(e.target.value)} onSend={() => handleSend()} />
-              <ToastContainer limit={2}/>
+              <ToastContainer limit={2} />
             </>
           ) : (
             <NoMessage />

@@ -26,6 +26,7 @@ const BtnBack = styled.img`
 const AvatarWrapper = styled.div`
   width: 200px;
   height: 200px;
+  object-fit: cover;
 `;
 
 const Avatar = styled.img`
@@ -35,6 +36,11 @@ const Avatar = styled.img`
   border-radius: 50%;
   cursor: pointer;
 `;
+
+const ImgAvatarWrapper = styled.div`
+  width: 200px;
+  height: 200px;
+`
 
 const Name = styled.span`
   font-size: 20px;
@@ -57,7 +63,9 @@ const SideProfile = (props) => {
       <div className="d-flex justify-content-center mt-5 mb-5">
         <AvatarWrapper>
           <label htmlFor="avatar">
+            <ImgAvatarWrapper>
             <Avatar src={props.img} alt="" />
+            </ImgAvatarWrapper>
           </label>
           <Name>{props.name}</Name>
         </AvatarWrapper>

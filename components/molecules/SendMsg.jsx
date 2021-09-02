@@ -88,7 +88,7 @@ const SendMsg = (props) => {
     <Fragment>
       <Wrapper>
         <InputIconWrapper>
-          <TextMsg value={props.value} placeholder="Type your message..." onChange={(e) => props.onChange(e)} />
+          <TextMsg value={props.value} placeholder="Type your message..." onChange={(e) => props.onChange(e)} onKeyPress={(e) => e.key === 'Enter' && props.onSend()}/>
           <IconWrapper>
             <Icon src={send.src} alt="" onClick={props.onSend}/>
             <Icon src={plus.src} alt="" />

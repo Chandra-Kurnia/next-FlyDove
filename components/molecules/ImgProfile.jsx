@@ -28,7 +28,7 @@ const Active = styled.div`
 const ImgProfile = (props) => {
   return (
     <Fragment>
-      <ImgWrapper>
+      <ImgWrapper className={props.className}>
         <IMG src={props.src} alt="" />
         {props.active === true && <Active />}
       </ImgWrapper>

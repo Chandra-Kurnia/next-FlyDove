@@ -2,6 +2,7 @@ import {Fragment} from 'react';
 import styled from 'styled-components';
 import ImgProfile from '../molecules/ImgProfile';
 import ProfileMenu from '../../public/assets/icons/ProfileMenu.svg';
+import back from '../../public/assets/icons/back.svg'
 
 const UserChat = styled.div`
   background-color: white;
@@ -66,11 +67,23 @@ const Status = styled.span`
   text-overflow: ellipsis;
 `;
 
+const BackButton = styled.img`
+margin-right: 10px;
+@media (min-width: 768px) {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  display: none;
+}
+`
+
 const CardChatProfile = (props) => {
   return (
     <Fragment>
       <UserChat>
-        <ImgProfile src={props.img} active={props.active} />
+        <BackButton onClick={props.backChats} src={back.src} alt="" />
+        <ImgProfile className='me-2' src={props.img} active={props.active} />
         <NameStatusWrapper>
           <NameStatus>
             <Name>{props.name}</Name>

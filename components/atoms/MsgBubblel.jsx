@@ -1,6 +1,7 @@
 import {Fragment} from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import delIcon from '../../public/assets/icons/delete.svg';
 
 const BubbleSender = styled.div`
   background-color: var(--primary);
@@ -62,15 +63,30 @@ const Time2 = styled.span`
   font-size: small;
 `;
 
+const Btndelete = styled.button`
+  background-color: var(--bg-chat);
+  border: none;
+  outline: none;
+  margin: auto 10px;
+`;
+
+const DeleteIcon = styled.img`
+  width: 20px;
+  height: 20px;
+`;
+
 const MsgBubblel = (props) => {
   return (
     <Fragment>
       {props.user === true ? (
         <>
           <RecieverWrapper>
-            <BubbleUser>{props.msg}</BubbleUser>
+            <BubbleUser>{props.msg}</BubbleUser>{' '}
+            <Btndelete onClick={props.onClick}>
+              <DeleteIcon src={delIcon.src} />
+            </Btndelete>
           </RecieverWrapper>
-          <Time>{moment(props.time).format('LT')}</Time>
+          <Time className='pe-5'>{moment(props.time).format('LT')}</Time>
         </>
       ) : (
         <>
