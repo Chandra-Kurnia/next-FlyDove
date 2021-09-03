@@ -29,7 +29,7 @@ const ImgProfile = (props) => {
   return (
     <Fragment>
       <ImgWrapper className={props.className}>
-        <IMG src={props.src} alt="" />
+        <IMG src={props.src} alt="" onClick={props.onClick}/>
         {props.active === true && <Active />}
       </ImgWrapper>
     </Fragment>

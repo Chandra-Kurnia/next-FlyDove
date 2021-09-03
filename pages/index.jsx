@@ -23,6 +23,7 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import notif from '../public/assets/icons/notif.svg';
 import SimpleReactValidator from 'simple-react-validator';
+import SidebarProfileUser from '../components/organisms/SidebarProfileUser';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -34,6 +35,7 @@ const Wrapper = styled.div`
   display: flex;
   position: relative;
   width: 100%;
+  /* overflow: hidden; */
 
   @media (min-width: 768px) {
     width: 100%;
@@ -52,6 +54,8 @@ const Chats = styled.div`
   position: relative;
   min-height: 100vh;
   transition: all 200ms ease-in-out;
+  animation-name: fadeAnimation;
+  animation-duration: 0.5s;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -72,6 +76,8 @@ const Chat = styled.div`
   overflow-y: auto;
   padding-bottom: 130px;
   transition: all 200ms ease-in-out;
+  animation-name: fadeAnimation;
+  animation-duration: 0.5s;
 
   @media (min-width: 768px) {
     width: 50%;
@@ -151,7 +157,6 @@ const Index = (props) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
   };
-  const validator = useRef(new SimpleReactValidator({className: 'fs-1 text-danger'}));
   const {push} = useRouter();
   const users = props.datausers;
   const token = props.cookie;
@@ -165,6 +170,7 @@ const Index = (props) => {
   const [avatar, setavatar] = useState(`${process.env.API_SERVER_URL}${user.avatar}`);
   const [lastMSG, setlastMSG] = useState('');
   const [controlWidth, setcontrolWidth] = useState(0);
+  const [handleSidebarProfile, sethandleSidebarProfile] = useState(0);
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -375,6 +381,9 @@ const Index = (props) => {
                 name={userInChat.name}
                 active={userInChat.online}
                 img={`${process.env.API_SERVER_URL}${userInChat.avatar}`}
+                onClickImageProfile={() =>
+                  handleSidebarProfile === 0 ? sethandleSidebarProfile(1) : sethandleSidebarProfile(0)
+                }
               />
               <MSG>
                 {messages &&
@@ -398,6 +407,7 @@ const Index = (props) => {
             <NoMessage />
           )}
         </Chat>
+        <SidebarProfileUser className={handleSidebarProfile === 1 && 'control-sidebar-profile'} />
       </Wrapper>
     </Fragment>
   );

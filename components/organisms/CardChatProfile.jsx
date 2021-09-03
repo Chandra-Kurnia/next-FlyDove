@@ -83,7 +83,7 @@ const CardChatProfile = (props) => {
     <Fragment>
       <UserChat>
         <BackButton onClick={props.backChats} src={back.src} alt="" />
-        <ImgProfile className='me-2' src={props.img} active={props.active} />
+        <ImgProfile className='me-2' src={props.img} active={props.active} onClick={props.onClickImageProfile}/>
         <NameStatusWrapper>
           <NameStatus>
             <Name>{props.name}</Name>

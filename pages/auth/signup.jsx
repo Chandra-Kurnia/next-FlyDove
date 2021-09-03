@@ -1,4 +1,4 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useState, useRef} from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
 import Head from 'next/head';
 import AuthWrapper from '../../components/organisms/AuthWrapper';
@@ -6,6 +6,7 @@ import InputAuthMolecul from '../../components/molecules/InputAuthMolecul';
 import {useDispatch} from 'react-redux';
 import {register} from '../../redux/actions/userAction';
 import {useRouter} from 'next/router';
+import SimpleReactValidator from 'simple-react-validator';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -33,6 +34,7 @@ const Wrapper = styled.div`
 `;
 
 const Signup = () => {
+  const validator = useRef(new SimpleReactValidator({className: 'fs-6 text-danger'}));
   const {push} = useRouter();
   const dispatch = useDispatch();
   const [form, setform] = useState({
@@ -67,15 +69,33 @@ const Signup = () => {
           questionAuth="Dont have an account ?"
           parent="Sign up"
         >
-          <InputAuthMolecul className="pt-3" label="Name" type="text" name="name" onChange={(e) => handleForm(e)} />
-          <InputAuthMolecul className="pt-3" label="Email" type="text" name="email" onChange={(e) => handleForm(e)} />
+          <InputAuthMolecul
+            className="pt-3"
+            label="Name"
+            type="text"
+            name="name"
+            onChange={(e) => handleForm(e)}
+            onFocus={() => validator.current.showMessageFor('name')}
+          />
+          {validator.current.message('name', form.name, 'required')}
+          <InputAuthMolecul
+            className="pt-3"
+            label="Email"
+            type="text"
+            name="email"
+            onChange={(e) => handleForm(e)}
+            onFocus={() => validator.current.showMessageFor('email')}
+          />
+          {validator.current.message('email', form.email, 'required|email')}
           <InputAuthMolecul
             className="pt-3"
             label="Password"
             type="password"
             name="password"
             onChange={(e) => handleForm(e)}
+            onFocus={() => validator.current.showMessageFor('password')}
           />
+          {validator.current.message('email', form.email, 'required|email')}
         </AuthWrapper>
       </Wrapper>
     </Fragment>

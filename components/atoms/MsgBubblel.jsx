@@ -35,6 +35,7 @@ const BubbleUser = styled.div`
   border-bottom-left-radius: 30px;
   padding: 20px;
   margin-top: 10px;
+  box-shadow: 3px 3px 10px grey;
 `;
 
 const SenderWrapper = styled.div`

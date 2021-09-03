@@ -4,6 +4,11 @@ import back from '../../public/assets/icons/back.svg';
 import ButtonAuth from '../atoms/ButtonAuth';
 import InputAuthMolecul from '../molecules/InputAuthMolecul';
 
+const Wrapper = styled.div`
+animation-name: fadeAnimation;
+animation-duration: 0.5s;
+`
+
 const TopWrapper = styled.div`
   width: 100%;
   height: 20px;
@@ -54,6 +59,7 @@ const Name = styled.span`
 const SideProfile = (props) => {
   return (
     <Fragment>
+      <Wrapper className="">
       <TopWrapper>
         <span onClick={props.OutProfile}>
           <BtnBack src={back.src} alt="back-icon" />
@@ -92,6 +98,7 @@ const SideProfile = (props) => {
         onChange={(e) => props.onChange(e)}
       />
       <ButtonAuth text="Update Profile" className="mt-3 bg-custom-primary" onClick={props.onUpdate} />
+      </Wrapper>
     </Fragment>
   );
 };

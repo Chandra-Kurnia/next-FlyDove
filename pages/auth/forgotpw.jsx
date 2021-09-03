@@ -1,8 +1,10 @@
-import {Fragment, useState} from 'react';
+import {Fragment, useState, useRef} from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
 import Head from 'next/head';
 import AuthWrapper from '../../components/organisms/AuthWrapper';
 import InputAuthMolecul from '../../components/molecules/InputAuthMolecul';
+import SimpleReactValidator from 'simple-react-validator';
+
 const Globalstyle = createGlobalStyle`
 body{
     background-color: white;
@@ -29,6 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const Signup = () => {
+  const validator = useRef(new SimpleReactValidator({className: 'fs-6 text-danger'}));
   const [form, setform] = useState({
     email: '',
   });
@@ -59,7 +62,15 @@ const Signup = () => {
           questionAuth="Dont have an account ?"
           parent="send"
         >
-          <InputAuthMolecul className="pt-3" label="Email" type="text" name="email" onChange={(e) => handleForm(e)} />
+          <InputAuthMolecul
+            className="pt-3"
+            label="Email"
+            type="text"
+            name="email"
+            onChange={(e) => handleForm(e)}
+            onFocus={() => validator.current.showMessageFor('email')}
+          />
+          {validator.current.message('email', form.email, 'required|email')}
         </AuthWrapper>
       </Wrapper>
     </Fragment>
