@@ -245,6 +245,7 @@ const Index = (props) => {
 
   const handleLogout = () => {
     dispatch(logout(push));
+    socket.disconnect()
   };
 
   const hanldeFormUpdateProfile = (e) => {
@@ -346,7 +347,7 @@ const Index = (props) => {
                         key={index}
                         className="mt-3"
                         name={user.username ? user.username : user.name}
-                        count={user.unread}
+                        // count={user.unread}
                         LastChat={user.message}
                         active={user.online === 1 ? true : false}
                         img={`${process.env.API_SERVER_URL}${user.avatar}`}
@@ -378,7 +379,7 @@ const Index = (props) => {
             <>
               <CardChatProfile
                 backChats={() => setcontrolWidth(0)}
-                name={userInChat.name}
+                name={userInChat.username ? userInChat.username : userInChat.name}
                 active={userInChat.online}
                 img={`${process.env.API_SERVER_URL}${userInChat.avatar}`}
                 onClickImageProfile={() =>
@@ -407,7 +408,14 @@ const Index = (props) => {
             <NoMessage />
           )}
         </Chat>
-        <SidebarProfileUser className={handleSidebarProfile === 1 && 'control-sidebar-profile'} />
+        <SidebarProfileUser
+          className={handleSidebarProfile === 1 && 'control-sidebar-profile'}
+          username={userInChat.username ? userInChat.username : userInChat.name}
+          avatar={userInChat.avatar}
+          phone_number={userInChat.phone_number}
+          bio={userInChat.bio}
+          OutProfile={() => sethandleSidebarProfile(0)}
+        />
       </Wrapper>
     </Fragment>
   );
