@@ -48,7 +48,7 @@ const Signup = () => {
   return (
     <Fragment>
       <Head>
-        <title>Telegram | Forgot Password</title>
+        <title>FlyDove | Forgot Password</title>
       </Head>
       <Globalstyle />
       <Wrapper className="d-flex justify-content-center align-items-center mt-lg-4 mt-md-5 mt-0">

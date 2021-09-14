@@ -24,6 +24,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import notif from '../public/assets/icons/notif.svg';
 import SimpleReactValidator from 'simple-react-validator';
 import SidebarProfileUser from '../components/organisms/SidebarProfileUser';
+import ViewUsers from '../components/organisms/ViewUsers';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -128,9 +129,9 @@ export const getServerSideProps = async (ctx) => {
   try {
     const cookie = ctx.req.headers.cookie || '';
     const ResdataUser = await axios.get('/user/checktoken', {headers: {cookie}});
-    const ResAllDataUser = await axios.get('/user/userinchat', {headers: {cookie}});
+    const ResUserInChat = await axios.get('/user/userinchat', {headers: {cookie}});
     const dataUser = ResdataUser.data.data;
-    const datausers = ResAllDataUser.data.data;
+    const datausers = ResUserInChat.data.data;
     return {
       props: {
         dataUser,
@@ -171,6 +172,8 @@ const Index = (props) => {
   const [lastMSG, setlastMSG] = useState('');
   const [controlWidth, setcontrolWidth] = useState(0);
   const [handleSidebarProfile, sethandleSidebarProfile] = useState(0);
+  const [viewUsers, setviewUsers] = useState(0)
+  const [allUser, setallUser] = useState()
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -214,6 +217,16 @@ const Index = (props) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    axios.get(`${process.env.API_SERVER_URL}/user/getallusers`)
+    .then((res) => {
+      setallUser(res.data.data)
+    })
+    .catch(err => {
+      console.log(err.response);
+    })
+  }, [])
+
   const handleSend = () => {
     {
       message &&
@@ -236,7 +249,7 @@ const Index = (props) => {
       setmessages(dataMessages.data.data);
       setcontrolWidth(1);
       setlastMSG(dataMessages.data.data[dataMessages.data.data.length - 1]);
-      console.log(lastMSG);
+      // console.log(lastMSG);
     } catch (error) {
       swal('Error', 'Cant get data chat, please try again later', 'error');
       push('/auth/login');
@@ -245,7 +258,7 @@ const Index = (props) => {
 
   const handleLogout = () => {
     dispatch(logout(push));
-    socket.disconnect()
+    socket.disconnect();
   };
 
   const hanldeFormUpdateProfile = (e) => {
@@ -315,6 +328,19 @@ const Index = (props) => {
     });
   };
 
+  const handleStartChatting = (user) => {
+    const indexOfUser = users.findIndex(function(element){
+      if(element !== null){
+        return element.user_id === user.user_id
+      }
+    })
+    if(indexOfUser < 0){
+      users.splice(0, 0, user)
+    }
+    getMessages(user.user_id)
+    setviewUsers(0)
+  }
+
   return (
     <Fragment>
       <Head>
@@ -323,7 +349,22 @@ const Index = (props) => {
       <Globalstyle />
       <Wrapper>
         <Chats className={controlWidth === 1 && 'control-width-chats'}>
-          {profileMenu === 0 ? (
+          {profileMenu === 1 ? (
+            <SideProfile
+              name={user.name}
+              phone_number={user.phone_number}
+              bio={user.bio}
+              username={user.username ? user.username : user.name}
+              img={avatar}
+              OutProfile={() => {
+                setprofileMenu(0);
+                setdropMenu(0);
+              }}
+              onChange={(e) => hanldeFormUpdateProfile(e)}
+              onUpdate={handleUpdateProfile}
+              onUpload={(e) => handleAvatar(e)}
+            />
+          ) : viewUsers === 0 ? (
             <>
               <Banner>
                 <Textbanner>FlyDove</Textbanner>
@@ -337,7 +378,7 @@ const Index = (props) => {
               <SearchChat
                 className="ms-0 ms-lg-4 ms-md-2 mt-3 mt-md-4 mt-lg-5"
                 // onChange={(e) => console.log(e.target.value)}
-                // clickPlus={() => console.log('plus click')}
+                clickPlus={() => setviewUsers(1)}
               />
               {users &&
                 users.map(
@@ -357,22 +398,21 @@ const Index = (props) => {
                     )
                 )}
             </>
-          ) : (
-            <SideProfile
-              name={user.name}
-              phone_number={user.phone_number}
-              bio={user.bio}
-              username={user.username ? user.username : user.name}
-              img={avatar}
-              OutProfile={() => {
-                setprofileMenu(0);
-                setdropMenu(0);
-              }}
-              onChange={(e) => hanldeFormUpdateProfile(e)}
-              onUpdate={handleUpdateProfile}
-              onUpload={(e) => handleAvatar(e)}
-            />
-          )}
+          ) :
+          <>
+          {
+            allUser && allUser.map((user, index) => user !== null && (
+              <ViewUsers
+              key={index}
+                name={user.username ? user.username : user.name}
+                img={`${process.env.API_SERVER_URL}${user.avatar}`}
+                onClick={() => handleStartChatting(user)}
+              />
+            ))
+          }
+          </>
+          
+          }
         </Chats>
         <Chat className={controlWidth === 1 && 'control-width-chat'}>
           {userInChat.user_id ? (

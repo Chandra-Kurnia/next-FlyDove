@@ -86,8 +86,8 @@ padding-top: 30px;
   background-color: #c2f1eb;
   padding: 20px;
   border-radius: 10px;
-  max-height: 200px;
-  min-height: 200px;
+  max-height: 150px;
+  min-height: 150px;
   overflow: auto;
   text-overflow: ellipsis;
 }

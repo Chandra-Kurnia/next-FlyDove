@@ -54,7 +54,7 @@ const Login = (props) => {
   return (
     <Fragment>
       <Head>
-        <title>Telegram | Login</title>
+        <title>FlyDove | Login</title>
       </Head>
       <Globalstyle />
       <Wrapper className="d-flex justify-content-center align-items-center mt-lg-4 mt-md-5 mt-0">

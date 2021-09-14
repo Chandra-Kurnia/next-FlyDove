@@ -55,7 +55,7 @@ const Signup = () => {
   return (
     <Fragment>
       <Head>
-        <title>Telegram | Sign up</title>
+        <title>FlyDove | Sign up</title>
       </Head>
       <Globalstyle />
       <Wrapper className="d-flex justify-content-center align-items-center mt-lg-4 mt-md-5 mt-0">

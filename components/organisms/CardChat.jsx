@@ -81,7 +81,7 @@ const CardChat = (props) => {
             </LastChat>
           </NameChat>
           <TimeCount>
-            <Time>{moment(props.time).format('LT')}</Time>
+            <Time>{props.time && moment(props.time).format('LT')}</Time>
             {props.count > 0 && <Count>{props.count}</Count>}
           </TimeCount>
         </RowNameChat>
