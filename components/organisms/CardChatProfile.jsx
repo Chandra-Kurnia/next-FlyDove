@@ -1,7 +1,7 @@
 import {Fragment} from 'react';
 import styled from 'styled-components';
 import ImgProfile from '../molecules/ImgProfile';
-import ProfileMenu from '../../public/assets/icons/ProfileMenu.svg';
+import ProfileMenu from '../../public/assets/icons/profileMenu.svg';
 import back from '../../public/assets/icons/back.svg'
 
 const UserChat = styled.div`
