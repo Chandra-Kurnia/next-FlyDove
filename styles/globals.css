@@ -56,6 +56,10 @@ a {
   display: block !important;
 }
 
+.pointer{
+  cursor: pointer;
+}
+
 @media (min-width: 768px) {
   .control-width-chats {
     width: 50% !important;

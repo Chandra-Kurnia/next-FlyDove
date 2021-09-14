@@ -25,6 +25,7 @@ import notif from '../public/assets/icons/notif.svg';
 import SimpleReactValidator from 'simple-react-validator';
 import SidebarProfileUser from '../components/organisms/SidebarProfileUser';
 import ViewUsers from '../components/organisms/ViewUsers';
+import back from '../public/assets/icons/back.svg'
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -125,6 +126,14 @@ const MSG = styled.div`
   }
 `;
 
+const SearchUsers = styled.input`
+width: 85%;
+height: 40px;
+border-radius: 10px;
+border: 0.5px solid #d8d8d8;
+padding: 10px;
+`
+
 export const getServerSideProps = async (ctx) => {
   try {
     const cookie = ctx.req.headers.cookie || '';
@@ -172,8 +181,9 @@ const Index = (props) => {
   const [lastMSG, setlastMSG] = useState('');
   const [controlWidth, setcontrolWidth] = useState(0);
   const [handleSidebarProfile, sethandleSidebarProfile] = useState(0);
-  const [viewUsers, setviewUsers] = useState(0)
-  const [allUser, setallUser] = useState()
+  const [viewUsers, setviewUsers] = useState(0);
+  const [allUser, setallUser] = useState();
+  const [keywordSearchUsers, setkeywordSearchUsers] = useState('')
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -218,14 +228,15 @@ const Index = (props) => {
   }, [messages]);
 
   useEffect(() => {
-    axios.get(`${process.env.API_SERVER_URL}/user/getallusers`)
-    .then((res) => {
-      setallUser(res.data.data)
-    })
-    .catch(err => {
-      console.log(err.response);
-    })
-  }, [])
+    axios
+      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`)
+      .then((res) => {
+        setallUser(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, [keywordSearchUsers]);
 
   const handleSend = () => {
     {
@@ -329,17 +340,17 @@ const Index = (props) => {
   };
 
   const handleStartChatting = (user) => {
-    const indexOfUser = users.findIndex(function(element){
-      if(element !== null){
-        return element.user_id === user.user_id
+    const indexOfUser = users.findIndex(function (element) {
+      if (element !== null) {
+        return element.user_id === user.user_id;
       }
-    })
-    if(indexOfUser < 0){
-      users.splice(0, 0, user)
+    });
+    if (indexOfUser < 0) {
+      users.splice(0, 0, user);
     }
-    getMessages(user.user_id)
-    setviewUsers(0)
-  }
+    getMessages(user.user_id);
+    setviewUsers(0);
+  };
 
   return (
     <Fragment>
@@ -398,21 +409,29 @@ const Index = (props) => {
                     )
                 )}
             </>
-          ) :
-          <>
-          {
-            allUser && allUser.map((user, index) => user !== null && (
-              <ViewUsers
-              key={index}
-                name={user.username ? user.username : user.name}
-                img={`${process.env.API_SERVER_URL}${user.avatar}`}
-                onClick={() => handleStartChatting(user)}
-              />
-            ))
-          }
-          </>
-          
-          }
+          ) : (
+            <>
+                  <Banner>
+                    <img className='pointer' src={back.src} alt="" onClick={() => setviewUsers(0)}/>
+                    <SearchUsers type="text" placeholder='Search user' onChange={(e) => setkeywordSearchUsers(e.target.value)}/>
+                  </Banner>
+                  <br />
+              {allUser &&
+                allUser.map(
+                  (user, index) =>
+                    user !== null && (
+                      <>
+                        <ViewUsers
+                          key={index}
+                          name={user.username ? user.username : user.name}
+                          img={`${process.env.API_SERVER_URL}${user.avatar}`}
+                          onClick={() => handleStartChatting(user)}
+                        />
+                      </>
+                    )
+                )}
+            </>
+          )}
         </Chats>
         <Chat className={controlWidth === 1 && 'control-width-chat'}>
           {userInChat.user_id ? (
