@@ -1,5 +1,6 @@
 import swal from 'sweetalert';
-import {default as axios} from '../../configs/axios';
+import axiosConfigs from '../../configs/axios';
+import axios from 'axios'
 
 const register = (data, push) => async (dispatch) => {
   try {
@@ -23,17 +24,17 @@ const login = (form, push) => async (dispatch) => {
     dispatch({type: 'USER_LOGIN', payload: user});
     push('/');
   } catch (error) {
-    if (error?.response?.data?.error[0]?.msg === undefined) {
-      swal('Login failed', error?.response?.data?.message, 'error');
+    if (error?.response?.data?.error?.error[0]?.msg === undefined) {
+      swal('Login failed', error?.response?.data?.error?.message, 'error');
     } else {
-      swal('Login failed', error?.response?.data?.error[0]?.msg, 'error');
+      swal('Login failed', error?.response?.data?.error?.error[0]?.msg, 'error');
     }
   }
 };
 
 const logout = (push) => async () => {
   try {
-    axios.get('user/logout').then(() => {
+    axiosConfigs.get('user/logout').then(() => {
       swal('Success', 'Logout success', 'success').then(() => {
         push('/auth/login');
       });
@@ -50,7 +51,7 @@ const updateProfile = (data) => async(dispatch) => {
     formData.append('phone_number', data.phone_number);
     formData.append('bio', data.bio);
     formData.append('avatar', data.avatar);
-    await axios.post('/user/updateuser', formData)
+    await axiosConfigs.post('/user/updateuser', formData)
     swal('Success', 'Your data succesfully updated', 'success')
   }catch(err){
     swal('Register error', error?.response?.data?.message, 'error');
