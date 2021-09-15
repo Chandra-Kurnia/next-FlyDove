@@ -196,7 +196,7 @@ const Index = (props) => {
     if (!socket) {
       const socket = io(process.env.API_SERVER_URL, {
         query: {
-          token: token,
+          token: cookie,
         },
       });
       setsocket(socket);
@@ -327,7 +327,7 @@ const Index = (props) => {
         axios
           .delete(`/messages/delete/${message_id}`)
           .then(async () => {
-            const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {token}});
+            const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {cookie}});
             setmessages(dataMessages.data.data);
             swal('Success', 'Message successfully deleted', 'success');
           })
