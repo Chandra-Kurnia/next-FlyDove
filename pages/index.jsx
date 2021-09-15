@@ -229,7 +229,7 @@ const Index = (props) => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`)
+      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`, {headers: token})
       .then((res) => {
         setallUser(res.data.data);
       })
