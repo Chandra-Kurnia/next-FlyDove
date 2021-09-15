@@ -137,8 +137,8 @@ padding: 10px;
 export const getServerSideProps = async (ctx) => {
   try {
     const cookie = ctx.req.headers.cookie || '';
-    const ResdataUser = await axios.get('/user/checktoken', {headers: {cookie}});
-    const ResUserInChat = await axios.get('/user/userinchat', {headers: {cookie}});
+    const ResdataUser = await axios.get('/user/checktoken');
+    const ResUserInChat = await axios.get('/user/userinchat');
     const dataUser = ResdataUser.data.data;
     const datausers = ResUserInChat.data.data;
     return {
