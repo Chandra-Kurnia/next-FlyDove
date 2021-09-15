@@ -59,7 +59,6 @@ const Login = (props) => {
   const {push} = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(props.user);
     if (Object.keys(props.user).length > 0) {
       push('/');
     }

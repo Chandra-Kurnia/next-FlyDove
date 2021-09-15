@@ -20,6 +20,7 @@ const register = (data, push) => async (dispatch) => {
 const login = (form, push) => async (dispatch) => {
   try {
     const result = await axios.post('https://skydove.vercel.app/api/login', form);
+    // const result = await axios.post('http://localhost:3000/api/login', form);
     const user = result.data.data;
     dispatch({type: 'USER_LOGIN', payload: user});
     push('/');

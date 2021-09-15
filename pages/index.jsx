@@ -229,7 +229,7 @@ const Index = (props) => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`, {headers: {cookie}})
+      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`)
       .then((res) => {
         setallUser(res.data.data);
       })
@@ -254,7 +254,7 @@ const Index = (props) => {
 
   const getMessages = async (user_id) => {
     try {
-      const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {cookie}});
+      const dataMessages = await axios.get(`messages/getmessages/${user_id}`);
       const userChat = await axios.get(`user/showbyid/${user_id}`);
       setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
@@ -327,7 +327,7 @@ const Index = (props) => {
         axios
           .delete(`/messages/delete/${message_id}`)
           .then(async () => {
-            const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {cookie}});
+            const dataMessages = await axios.get(`messages/getmessages/${user_id}`);
             setmessages(dataMessages.data.data);
             swal('Success', 'Message successfully deleted', 'success');
           })
