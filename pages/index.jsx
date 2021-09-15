@@ -169,7 +169,7 @@ const Index = (props) => {
   };
   const {push} = useRouter();
   const users = props.datausers;
-  const token = props.cookie;
+  const cookie = props.cookie;
   const [user, setuser] = useState(props.dataUser);
   const [dropMenu, setdropMenu] = useState(0);
   const [message, setmessage] = useState();
@@ -229,7 +229,7 @@ const Index = (props) => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`, {headers: token})
+      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`, {headers: {cookie}})
       .then((res) => {
         setallUser(res.data.data);
       })
@@ -252,9 +252,9 @@ const Index = (props) => {
     }
   };
 
-  const getMessages = async (user_id, token) => {
+  const getMessages = async (user_id) => {
     try {
-      const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {token}});
+      const dataMessages = await axios.get(`messages/getmessages/${user_id}`, {headers: {cookie}});
       const userChat = await axios.get(`user/showbyid/${user_id}`);
       setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
