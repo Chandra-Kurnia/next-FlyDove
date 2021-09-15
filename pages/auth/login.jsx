@@ -1,4 +1,5 @@
-import {Fragment, useState, useRef} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useState, useRef, useEffect} from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
 import Head from 'next/head';
 import AuthWrapper from '../../components/organisms/AuthWrapper';
@@ -7,6 +8,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../redux/actions/userAction';
 import {useRouter} from 'next/router';
 import SimpleReactValidator from 'simple-react-validator';
+import {default as axios} from '../../configs/axios';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -33,10 +35,34 @@ const Wrapper = styled.div`
   }
 `;
 
+export const getServerSideProps = async (ctx) => {
+  try {
+    const cookie = ctx.req.headers.cookie || '';
+    const ResdataUser = await axios.get('/user/checktoken', {headers: {cookie}});
+    const user = ResdataUser.data.data;
+    return {
+      props: {
+        user,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        user: {},
+      },
+    };
+  }
+};
+
 const Login = (props) => {
   const validator = useRef(new SimpleReactValidator({className: 'fs-6 text-danger'}));
   const {push} = useRouter();
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (Object.keys(props.user).length > 0) {
+      push('/');
+    }
+  }, []);
   const [form, setform] = useState({
     email: '',
     password: '',

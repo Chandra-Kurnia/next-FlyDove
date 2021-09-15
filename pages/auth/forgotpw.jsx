@@ -1,9 +1,12 @@
-import {Fragment, useState, useRef} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Fragment, useState, useRef, useEffect} from 'react';
 import styled, {createGlobalStyle} from 'styled-components';
 import Head from 'next/head';
 import AuthWrapper from '../../components/organisms/AuthWrapper';
 import InputAuthMolecul from '../../components/molecules/InputAuthMolecul';
 import SimpleReactValidator from 'simple-react-validator';
+import {default as axios} from '../../configs/axios'
+import { useRouter } from 'next/router';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -30,8 +33,33 @@ const Wrapper = styled.div`
   }
 `;
 
-const Signup = () => {
+export const getServerSideProps = async (ctx) => {
+  try {
+    const cookie = ctx.req.headers.cookie || '';
+    const ResdataUser = await axios.get('/user/checktoken', {headers: {cookie}});
+    const user = ResdataUser.data.data;
+    return {
+      props: {
+        user,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        user: {},
+      },
+    };
+  }
+};
+
+const Forgotpw = (props) => {
+  const {push} = useRouter()
   const validator = useRef(new SimpleReactValidator({className: 'fs-6 text-danger'}));
+  useEffect(() => {
+    if (Object.keys(props.user).length > 0) {
+      push('/');
+    }
+  }, []);
   const [form, setform] = useState({
     email: '',
   });
@@ -77,4 +105,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Forgotpw;

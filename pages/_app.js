@@ -19,14 +19,14 @@ function MyApp({Component, pageProps}) {
           ></script>
         </Head>
         <NextNProgress
-  color="#29D"
-  startPosition={0.3}
-  stopDelayMs={200}
-  height={3}
-  showOnShallow={true}
-  options={{ easing: 'ease', speed: 500 }}
-/>
-      <Component {...pageProps} />
+          color="#29D"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height={3}
+          showOnShallow={true}
+          options={{easing: 'ease', speed: 500}}
+        />
+        <Component {...pageProps} />
       </Provider>
     </Fragment>
   );
