@@ -4,16 +4,15 @@ import axios from 'axios'
 
 const register = (data, push) => async (dispatch) => {
   try {
-    await axios.post(`${process.env.API_SERVER_URL}/user/register`, data);
+    await axiosConfigs.post('/user/register', data);
     swal('success', 'Register success, now you can login with yout account', 'success').then(() => {
       push('/auth/login');
     });
   } catch (error) {
-    console.log(error.response);
-    if (error?.response?.data?.error?.error[0]?.msg === undefined) {
-      swal('Login failed', error?.response?.data?.error?.message, 'error');
+    if (error?.response?.data?.error[0]?.msg === undefined) {
+      swal('Login failed', error?.response?.data?.message, 'error');
     } else {
-      swal('Login failed', error?.response?.data?.error?.error[0]?.msg, 'error');
+      swal('Login failed', error?.response?.data?.error[0]?.msg, 'error');
     }
   }
 };
