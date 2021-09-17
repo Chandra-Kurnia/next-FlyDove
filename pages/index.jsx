@@ -229,7 +229,7 @@ const Index = (props) => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.API_SERVER_URL}/user/getallusers?keyword=${keywordSearchUsers}`, {headers: {cookie}})
+      .get(`${process.env.APP_URL}/api/getallusers?keyword=${keywordSearchUsers}`)
       .then((res) => {
         setallUser(res.data.data);
       })
@@ -416,7 +416,7 @@ const Index = (props) => {
                     <SearchUsers type="text" placeholder='Search user' onChange={(e) => setkeywordSearchUsers(e.target.value)}/>
                   </Banner>
                   <br />
-              {allUser &&
+              {allUser.length > 0 ?
                 allUser.map(
                   (user, index) =>
                     user !== null && (
@@ -429,7 +429,7 @@ const Index = (props) => {
                         />
                       </>
                     )
-                )}
+                ) : 'Users not found'}
             </>
           )}
         </Chats>
