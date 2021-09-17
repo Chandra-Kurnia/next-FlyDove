@@ -263,8 +263,8 @@ const Index = (props) => {
       // console.log(lastMSG);
     } catch (error) {
       console.log(error.response);
-      swal('Error', 'Cant get data chat, please try again later', 'error');
-      // push('/auth/login');
+      swal('Error', 'Login expired, please login again', 'error');
+      push('/auth/login');
     }
   };
 
