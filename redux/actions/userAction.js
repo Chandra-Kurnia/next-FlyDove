@@ -36,10 +36,9 @@ const login = (form, push) => async (dispatch) => {
 
 const logout = (push) => async () => {
   try {
-    axiosConfigs.get('user/logout').then(() => {
-      swal('Success', 'Logout success', 'success').then(() => {
-        push('/auth/login');
-      });
+    await axios.get(`${process.env.APP_URL}/api/logout`)
+    swal('Success', 'Logout success', 'success').then(() => {
+      push('/auth/login');
     });
   } catch (err) {
     console.log(err);
