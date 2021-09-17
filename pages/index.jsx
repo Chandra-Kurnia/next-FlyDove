@@ -254,7 +254,7 @@ const Index = (props) => {
 
   const getMessages = async (user_id) => {
     try {
-      const dataMessages = await axios.get(`messages/getmessages/${user_id}`);
+      const dataMessages = await axios.get(`${process.env.APP_URL}/api/datamessages?userId=${user_id}`);
       const userChat = await axios.get(`user/showbyid/${user_id}`);
       setuserInChat(userChat.data.data);
       setmessages(dataMessages.data.data);
@@ -262,8 +262,9 @@ const Index = (props) => {
       setlastMSG(dataMessages.data.data[dataMessages.data.data.length - 1]);
       // console.log(lastMSG);
     } catch (error) {
+      console.log(error.response);
       swal('Error', 'Cant get data chat, please try again later', 'error');
-      push('/auth/login');
+      // push('/auth/login');
     }
   };
 
