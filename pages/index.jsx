@@ -295,25 +295,44 @@ const Index = (props) => {
     formData.append('phone_number', formProfile.phone_number);
     formData.append('bio', formProfile.bio);
     formData.append('avatar', formProfile.avatar);
+    // axios.post(`${process.env.APP_URL}/api/updateprofile`, formData)
+    // .then((res) => {
+    //   console.log(res);
+    //   swal('Success', 'Your profile successfully updated', 'success')
+    // })
+    // .catch(err => {
+    //   console.log(err.response);
+    //   swal('Update Failed', 'failed to update your profile', 'error')
+    // })
+    // axios
+    //   .post('/user/updateuser', formData)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     swal('Update profile error', err.response.data.message, 'error').then(() => {
+    //       setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
+    //     });
+    //   });
     axios
-      .post('/user/updateuser', formData)
-      .then((res) => {
-        const newToken = res.data.data.token;
-        axios
-          .get('/user/checktoken', {headers: {cookie: newToken}})
-          .then((newData) => {
-            setuser(newData.data.data);
-            swal('Success', 'Profile updated successfully', 'success');
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        swal('Update profile error', err.response.data.message, 'error').then(() => {
-          setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
+    .post('/user/updateuser', formData, {headers: {cookie}})
+    .then((res) => {
+      const newToken = res.data.data.token;
+      axios
+        .get('/user/checktoken', {headers: {cookie: newToken}})
+        .then((newData) => {
+          setuser(newData.data.data);
+          swal('Success', 'Profile updated successfully', 'success');
+        })
+        .catch((err) => {
+          console.log(err);
         });
+    })
+    .catch((err) => {
+      swal('Update profile error', err.response.data.message, 'error').then(() => {
+        setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
       });
+    });
   };
 
   const handleDeleteMessage = (message_id, user_id) => {
