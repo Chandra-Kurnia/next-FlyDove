@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import back from '../../public/assets/icons/back.svg';
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   /* background-color: red; */
   background-color: #fff;
   right: 0;

@@ -25,7 +25,7 @@ import notif from '../public/assets/icons/notif.svg';
 import SimpleReactValidator from 'simple-react-validator';
 import SidebarProfileUser from '../components/organisms/SidebarProfileUser';
 import ViewUsers from '../components/organisms/ViewUsers';
-import back from '../public/assets/icons/back.svg'
+import back from '../public/assets/icons/back.svg';
 
 const Globalstyle = createGlobalStyle`
 body{
@@ -127,12 +127,12 @@ const MSG = styled.div`
 `;
 
 const SearchUsers = styled.input`
-width: 85%;
-height: 40px;
-border-radius: 10px;
-border: 0.5px solid #d8d8d8;
-padding: 10px;
-`
+  width: 85%;
+  height: 40px;
+  border-radius: 10px;
+  border: 0.5px solid #d8d8d8;
+  padding: 10px;
+`;
 
 export const getServerSideProps = async (ctx) => {
   try {
@@ -168,7 +168,7 @@ const Index = (props) => {
     messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
   };
   const {push} = useRouter();
-  const users = props.datausers;
+  const [users, setusers] = useState(props.datausers);
   const cookie = props.cookie;
   const [user, setuser] = useState(props.dataUser);
   const [dropMenu, setdropMenu] = useState(0);
@@ -183,7 +183,7 @@ const Index = (props) => {
   const [handleSidebarProfile, sethandleSidebarProfile] = useState(0);
   const [viewUsers, setviewUsers] = useState(0);
   const [allUser, setallUser] = useState();
-  const [keywordSearchUsers, setkeywordSearchUsers] = useState('')
+  const [keywordSearchUsers, setkeywordSearchUsers] = useState('');
   const dispatch = useDispatch();
   const [formProfile, setformProfile] = useState({
     username: user.username || '',
@@ -207,7 +207,10 @@ const Index = (props) => {
     if (socket) {
       socket.off('msgFromBackEnd');
       socket.on('msgFromBackEnd', (msg) => {
+
+        getAllChat()
         setlastMSG(msg);
+        
         if (userInChat.user_id === msg.sender_id) {
           setmessages((old) => {
             return [...old, msg];
@@ -238,12 +241,22 @@ const Index = (props) => {
       });
   }, [keywordSearchUsers]);
 
+  const getAllChat = () => {
+    axios.get(`${process.env.APP_URL}/api/getuserinchat`)
+    .then((result) => {
+      setusers(result.data.data)
+    })
+    .catch(err => {
+      console.log(err.response);
+    })
+  }
+
   const handleSend = () => {
     {
       message &&
         socket.emit('sendmsg', {message, recipient_id: userInChat.user_id, sender_name: user.name}, (cbBackend) => {
           setlastMSG(cbBackend);
-          console.log(cbBackend);
+          getAllChat()
           setmessages((old) => {
             return [...old, cbBackend];
           });
@@ -295,24 +308,25 @@ const Index = (props) => {
     formData.append('phone_number', formProfile.phone_number);
     formData.append('bio', formProfile.bio);
     formData.append('avatar', formProfile.avatar);
-    axios.post(`${process.env.APP_URL}/api/updateprofile`, formData)
-    .then((res) => {
-      swal('Success', 'Your profile successfully updated', 'success')
-      axios.get(`${process.env.APP_URL}/api/checktoken`, {headers: {cookie: res.data.data}})
-      .then((newProfile) => {
-        setuser(newProfile.data.data)
+    axios
+      .post(`${process.env.APP_URL}/api/updateprofile`, formData)
+      .then((res) => {
+        swal('Success', 'Your profile successfully updated', 'success');
+        axios
+          .get(`${process.env.APP_URL}/api/checktoken`, {headers: {cookie: res.data.data}})
+          .then((newProfile) => {
+            setuser(newProfile.data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
-      .catch(err => {
-        console.log(err);
-      })
-    })
-    .catch(err => {
-      console.log(err.response);
-      swal('Update Failed', 'failed to update your profile, please try again later', 'error')
-      .then(() => {
-        setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
-      })
-    })
+      .catch((err) => {
+        console.log(err.response);
+        swal('Update Failed', 'failed to update your profile, please try again later', 'error').then(() => {
+          setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
+        });
+      });
     // axios
     //   .post('/user/updateuser', formData)
     //   .then((res) => {
@@ -323,7 +337,6 @@ const Index = (props) => {
     //       setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
     //     });
     //   });
-
 
     // axios
     // .post('/user/updateuser', formData, {headers: {cookie}})
@@ -358,8 +371,9 @@ const Index = (props) => {
         axios
           .delete(`/messages/delete/${message_id}`)
           .then(async () => {
-            const dataMessages = await axios.get(`messages/getmessages/${user_id}`);
+            const dataMessages = await axios.get(`${process.env.APP_URL}/api/datamessages?userId=${user_id}`);
             setmessages(dataMessages.data.data);
+            getAllChat()
             swal('Success', 'Message successfully deleted', 'success');
           })
           .catch((err) => {
@@ -382,7 +396,6 @@ const Index = (props) => {
     getMessages(user.user_id);
     setviewUsers(0);
   };
-
   return (
     <Fragment>
       <Head>
@@ -432,6 +445,7 @@ const Index = (props) => {
                         name={user.username ? user.username : user.name}
                         // count={user.unread}
                         LastChat={user.message}
+                        // LastChat={lastMSG !== '' && lastMSG.sender_id === props.dataUser.user_id && lastMSG.recipient_id === user.user_id ? lastMSG.message : user.message}
                         active={user.online === 1 ? true : false}
                         img={`${process.env.API_SERVER_URL}${user.avatar}`}
                         time={user.time}
@@ -442,25 +456,30 @@ const Index = (props) => {
             </>
           ) : (
             <>
-                  <Banner>
-                    <img className='pointer' src={back.src} alt="" onClick={() => setviewUsers(0)}/>
-                    <SearchUsers type="text" placeholder='Search user' onChange={(e) => setkeywordSearchUsers(e.target.value)}/>
-                  </Banner>
-                  <br />
-              {allUser.length > 0 ?
-                allUser.map(
-                  (user, index) =>
-                    user !== null && (
-                      <>
-                        <ViewUsers
-                          key={index}
-                          name={user.username ? user.username : user.name}
-                          img={`${process.env.API_SERVER_URL}${user.avatar}`}
-                          onClick={() => handleStartChatting(user)}
-                        />
-                      </>
-                    )
-                ) : 'Users not found'}
+              <Banner>
+                <img className="pointer" src={back.src} alt="" onClick={() => setviewUsers(0)} />
+                <SearchUsers
+                  type="text"
+                  placeholder="Search user"
+                  onChange={(e) => setkeywordSearchUsers(e.target.value)}
+                />
+              </Banner>
+              <br />
+              {allUser.length > 0
+                ? allUser.map(
+                    (user, index) =>
+                      user !== null && (
+                        <>
+                          <ViewUsers
+                            key={index}
+                            name={user.username ? user.username : user.name}
+                            img={`${process.env.API_SERVER_URL}${user.avatar}`}
+                            onClick={() => handleStartChatting(user)}
+                          />
+                        </>
+                      )
+                  )
+                : 'Users not found'}
             </>
           )}
         </Chats>

@@ -88,13 +88,14 @@ const MsgBubblel = (props) => {
             </Btndelete>
           </RecieverWrapper>
           <Time className='pe-5'>{moment(props.time).format('LT')}</Time>
+          {/* <Time className='pe-5'>{props.time}</Time> */}
         </>
       ) : (
         <>
           <SenderWrapper>
             <BubbleSender>{props.msg}</BubbleSender>
           </SenderWrapper>
-          <Time2>{moment(props.time2).format('LT')}</Time2>
+          <Time2>{moment(props.time).format('LT')}</Time2>
         </>
       )}
     </Fragment>
