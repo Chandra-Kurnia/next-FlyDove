@@ -309,6 +309,9 @@ const Index = (props) => {
     .catch(err => {
       console.log(err.response);
       swal('Update Failed', 'failed to update your profile, please try again later', 'error')
+      .then(() => {
+        setavatar(`${process.env.API_SERVER_URL}${user.avatar}`);
+      })
     })
     // axios
     //   .post('/user/updateuser', formData)
