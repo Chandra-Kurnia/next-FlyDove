@@ -29,8 +29,8 @@ const updateprofile = async (req, res) => {
       // formdata.submit(`${process.env.API_SERVER_URL}/user/updateuser`,(err, result) => {
       formdata.submit(
         {
-          host: 'localhost',
-          port: 4215,
+          host: 'flyddove.herokuapp.com',
+          // port: 4215,
           method: 'post',
           path: '/user/updateuser',
           headers: {
@@ -44,7 +44,7 @@ const updateprofile = async (req, res) => {
               error: err,
             });
           } else {
-            const newToken = result.rawHeaders[7].split(';')[0].slice(6);
+            const newToken = result.rawHeaders[11].split(';')[0].slice(6);
             res.setHeader('Access-Control-Allow-Headers', '*');
             res.setHeader('Access-Control-Allow-Credentials', true);
             res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
