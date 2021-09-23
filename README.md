@@ -1,6 +1,4 @@
-#FlyDove - chatting app
-
----
+<img src="https://i.postimg.cc/1RGjrMV1/FlyDove.png">
 
 ## Contents
 
@@ -97,4 +95,4 @@ npm install
 
 ## Authors
 
-#####[Candra Kurniawan](https://github.com/Chandra-Kurnia) - https://github.com/Chandra-Kurnia
+[Candra Kurniawan](https://github.com/Chandra-Kurnia) - https://github.com/Chandra-Kurnia
