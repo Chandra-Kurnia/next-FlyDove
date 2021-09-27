@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/Chandra-Kurnia/nextjs-telegram">
+  <a href="https://github.com/Chandra-Kurnia/next-FlyDove">
     <img src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/Flydove.png" alt="Logo" width="180" height="180">
   </a>
 
@@ -10,14 +10,14 @@
   <p align="center">
     Flydove is a realtime chat application built using NextJs, ExpressJs, and socket.io.
     <br />
-    <a href="https://github.com/Chandra-Kurnia/nextjs-telegram"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Chandra-Kurnia/next-FlyDove"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://flydove.vercel.app">View Demo</a>
     ·
-    <a href="https://github.com/Chandra-Kurnia/nextjs-telegram">Report Bug</a>
+    <a href="https://github.com/Chandra-Kurnia/next-FlyDove">Report Bug</a>
     ·
-    <a href="https://github.com/Chandra-Kurnia/nextjs-telegram">Request Feature</a>
+    <a href="https://github.com/Chandra-Kurnia/next-FlyDove">Request Feature</a>
   </p>
 </p>
 
@@ -79,7 +79,7 @@ This is an example of how to list things you need to use the software and how to
 1. Clone These 2 Repos (Backend and Frontend)
 
 ```sh
-https://github.com/Chandra-Kurnia/nextjs-telegram.git
+https://github.com/Chandra-Kurnia/next-FlyDove.git
 ```
 
 2. Go To Folder Repo
@@ -109,7 +109,7 @@ npm run dev
 
 ### Related Project
 
-* [`Frontend FlyDove`](https://github.com/Chandra-Kurnia/nextjs-telegram)
+* [`Frontend FlyDove`](https://github.com/Chandra-Kurnia/next-FlyDove)
 * [`Backend FlyDove`](https://github.com/Chandra-Kurnia/express-telegram)
 
 <br/>
@@ -129,4 +129,4 @@ npm run dev
 
 My Email : candrakurniawan.dev@gmail.com
 
-Project Link: [https://github.com/Chandra-Kurnia/nextjs-telegram](https://github.com/Chandra-Kurnia/nextjs-telegram)
+Project Link: [https://github.com/Chandra-Kurnia/next-FlyDove](https://github.com/Chandra-Kurnia/next-FlyDove)
