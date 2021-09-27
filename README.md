@@ -117,10 +117,10 @@ npm run dev
 ## Screenshots
 
 <div align="center">
-    <img width="250" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/login.png">
-    <img width="250" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/signup.png">
-    <img width="250" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/search%20user.png">
-    <img width="250" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/home.png">
+    <img width="280" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/login.png">
+    <img width="280" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/signup.png">
+    <img width="280" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/search%20user.png">
+    <img width="280" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/home.png">
     <img width="700" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/chating.png">
     <img width="700" src="https://raw.githubusercontent.com/Chandra-Kurnia/assets/main/FlyDove/profile.png">
 </div>
